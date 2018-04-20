@@ -37,7 +37,14 @@ class AppDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        String sSQL;
+        // sSQL = "CREATE TABLE Tasks (_id INTEGER PRIMARY KEY NOT NULL, Name TEXT NOT NULL, Description TEXT, SortOrder INTEGER, CategoryID INTEGER);";
+        sSQL = "CREATE TABLE" + TaskContract.TABLE_NAME + " ("
+                + TaskContract.Columns._ID + "INTEGER PRIMARY KEY NOT NULL,"
+                + TaskContract.Columns.TASKS_NAME + " TEXT NOT NULL,"
+                + TaskContract.Columns.TASKS_DESCRIPTION + " TEXT, SortOrder INTEGER,"
+                + TaskContract.Columns.TASKS_SORTORDER + "INTEGER);";
+        db.execSQL(sSQL);
     }
 
     @Override
