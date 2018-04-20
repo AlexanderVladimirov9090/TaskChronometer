@@ -3,6 +3,9 @@ package com.gmail.alexander.taskchronometer.databasetools;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by:
@@ -13,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  *         AppProvider will be the one who use this class.
  */
 
-class AppDatabase extends SQLiteOpenHelper {
+ public class AppDatabase extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "TasksTimer.db";
     public static final int DATABASE_VERSION = 1;
     private static AppDatabase instance = null;
@@ -28,7 +31,8 @@ class AppDatabase extends SQLiteOpenHelper {
      * @param context
      * @return a SQLite database helper object
      */
-    static AppDatabase getInstance(Context context) {
+    public static AppDatabase getInstance(Context context) {
+        Log.d(TAG, "getInstance: Starts");
         if (instance == null) {
             instance = new AppDatabase(context);
         }
@@ -39,7 +43,7 @@ class AppDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sSQL;
         // sSQL = "CREATE TABLE Tasks (_id INTEGER PRIMARY KEY NOT NULL, Name TEXT NOT NULL, Description TEXT, SortOrder INTEGER, CategoryID INTEGER);";
-        sSQL = "CREATE TABLE" + TaskContract.TABLE_NAME + " ("
+        sSQL = "CREATE TABLE        " + TaskContract.TABLE_NAME + " ("
                 + TaskContract.Columns._ID + "INTEGER PRIMARY KEY NOT NULL,"
                 + TaskContract.Columns.TASKS_NAME + " TEXT NOT NULL,"
                 + TaskContract.Columns.TASKS_DESCRIPTION + " TEXT, SortOrder INTEGER,"
@@ -49,6 +53,12 @@ class AppDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        switch (oldVersion){
+            case 1:
+                //upgrade
+                break;
+            default:
+                throw new IllegalStateException("Unknown new version: "+ newVersion);
+        }
     }
 }

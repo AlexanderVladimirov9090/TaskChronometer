@@ -1,5 +1,6 @@
 package com.gmail.alexander.taskchronometer;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.gmail.alexander.taskchronometer.databasetools.AppDatabase;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -17,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
+        final SQLiteDatabase database= appDatabase.getReadableDatabase();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
