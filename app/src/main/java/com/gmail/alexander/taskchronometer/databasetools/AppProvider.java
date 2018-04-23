@@ -16,6 +16,9 @@ import android.support.annotation.Nullable;
  */
 
 public class AppProvider extends ContentProvider{
+    private AppDatabase openHelper;
+    static final String CONTENT_AUTHORITY = "com.gmail.alexandertaskchronometer";
+    public static final Uri CONTENT_AUTHORITY_URI= Uri.parse("content://"+ CONTENT_AUTHORITY);
 
     @Override
     public boolean onCreate() {
