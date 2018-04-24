@@ -1,18 +1,21 @@
 package com.gmail.alexander.taskchronometer;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.gmail.alexander.taskchronometer.databasetools.AppDatabase;
+import com.gmail.alexander.taskchronometer.databasetools.TaskContract;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +23,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        AppDatabase appDatabase = AppDatabase.getInstance(this);
-        final SQLiteDatabase database= appDatabase.getReadableDatabase();
-
+        String[] projection = {TaskContract.Columns.TASKS_NAME, TaskContract.Columns.TASKS_DESCRIPTION};
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursor = contentResolver.query(TaskContract.CONTENT_URI, projection, null, null, TaskContract.Columns.TASKS_NAME);
+        if (cursor != null) {
+            Log.d(TAG, "onCreate: " + cursor.getCount());
+            while (cursor.moveToNext()) {
+                for (int i = 0; i < cursor.getColumnCount(); i++) {
+                    Log.d(TAG, "onCreate: "+ cursor.getColumnName(i));
+                }
+                Log.d(TAG, "onCreate: ===================================================");
+            }
+            cursor.close();
+        }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

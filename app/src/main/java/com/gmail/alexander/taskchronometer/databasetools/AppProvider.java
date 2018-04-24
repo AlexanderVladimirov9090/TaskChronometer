@@ -11,8 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import javax.xml.datatype.Duration;
-
 import static android.content.ContentValues.TAG;
 
 /**
@@ -115,12 +113,13 @@ public class AppProvider extends ContentProvider {
 
         matcher.addURI(CONTENT_AUTHORITY, TaskContract.TABLE_NAME, TASKS);
         matcher.addURI(CONTENT_AUTHORITY,TaskContract.TABLE_NAME+ "/#", TASKS_ID);
-
+/*
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS);
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME+ "/#", TIMINGS_ID);
 
         matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATIONS);
         matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME+ "/#", TASK_DURATIONS_ID);
+   */
     return matcher;
     }
 }
