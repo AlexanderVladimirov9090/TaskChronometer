@@ -47,7 +47,7 @@ import static android.content.ContentValues.TAG;
                 + TaskContract.Columns._ID + "INTEGER PRIMARY KEY NOT NULL,"
                 + TaskContract.Columns.TASKS_NAME + " TEXT NOT NULL,"
                 + TaskContract.Columns.TASKS_DESCRIPTION + " TEXT, SortOrder INTEGER,"
-                + TaskContract.Columns.TASKS_SORTORDER + "INTEGER);";
+                + TaskContract.Columns.TASKS_SORT_ORDER + "INTEGER);";
         db.execSQL(sSQL);
     }
 

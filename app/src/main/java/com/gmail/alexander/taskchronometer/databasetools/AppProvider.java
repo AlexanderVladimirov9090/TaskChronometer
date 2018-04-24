@@ -25,7 +25,7 @@ import static android.content.ContentValues.TAG;
 public class AppProvider extends ContentProvider {
     private AppDatabase openHelper;
     public static final UriMatcher uriMatcher = buildUriMatcher();
-    static final String CONTENT_AUTHORITY = "com.gmail.alexandertaskchronometer";
+    static final String CONTENT_AUTHORITY = "com.gmail.alexander.taskchronometer";
     public static final Uri CONTENT_AUTHORITY_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final int TASKS = 100;
@@ -61,7 +61,7 @@ public class AppProvider extends ContentProvider {
                 long taskId= TaskContract.getTaskId(uri);
                 queryBuilder.appendWhere(TaskContract.Columns._ID+ "="+taskId);
                 break;
-
+/*
             case TIMINGS:
                 queryBuilder.setTables(TimingsContract.TABLE_NAME);
                 break;
@@ -79,7 +79,7 @@ public class AppProvider extends ContentProvider {
                 long durationId= DurationsContract.getDurationId(uri);
                 queryBuilder.appendWhere(DurationsContract.Columns._ID+ "="+durationId);
                 break;
-
+*/
                 default:
                     throw new IllegalArgumentException("Unknown URI: "+ uri);
         }

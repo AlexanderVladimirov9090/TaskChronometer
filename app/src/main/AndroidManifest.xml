@@ -19,6 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="com.gmail.alexander.taskchronometer.databasetools.AppProvider"
+            android:authorities="com.gmail.alexander.taskchronometer"
+            android:exported="false"/>
+
     </application>
+
 
 </manifest>
