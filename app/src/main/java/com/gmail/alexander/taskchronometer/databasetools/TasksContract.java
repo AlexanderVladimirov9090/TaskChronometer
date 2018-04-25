@@ -14,22 +14,23 @@ import static com.gmail.alexander.taskchronometer.databasetools.AppProvider.CONT
  * <alexandervladimirov1902@gmail.com>
  */
 
-public class TaskContract {
+public class TasksContract {
     static final String TABLE_NAME = "Tasks";
 
+    // Tasks fields
     public static class Columns {
         public static final String _ID = BaseColumns._ID;
         public static final String TASKS_NAME = "Name";
         public static final String TASKS_DESCRIPTION = "Description";
-        public static final String TASKS_SORT_ORDER = "SortOrder";
+        public static final String TASKS_SORTORDER = "SortOrder";
 
         private Columns() {
+            // private constructor to prevent instantiation
         }
-
-
     }
+
     /**
-     * The URI to access the TAsk table
+     * The URI to access the Tasks table
      */
     public static final Uri CONTENT_URI = Uri.withAppendedPath(CONTENT_AUTHORITY_URI, TABLE_NAME);
 
