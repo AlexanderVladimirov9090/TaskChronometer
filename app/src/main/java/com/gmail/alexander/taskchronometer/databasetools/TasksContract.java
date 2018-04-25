@@ -17,7 +17,6 @@ import static com.gmail.alexander.taskchronometer.databasetools.AppProvider.CONT
 public class TasksContract {
     static final String TABLE_NAME = "Tasks";
 
-    // Tasks fields
     public static class Columns {
         public static final String _ID = BaseColumns._ID;
         public static final String TASKS_NAME = "Name";
@@ -30,17 +29,27 @@ public class TasksContract {
     }
 
     /**
-     * The URI to access the Tasks table
+     * URI that is used to access the Tasks table.
      */
     public static final Uri CONTENT_URI = Uri.withAppendedPath(CONTENT_AUTHORITY_URI, TABLE_NAME);
 
     static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
     static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
 
+    /**
+     * Build the URI used for single task
+     * @param taskId id of the task
+     * @return URI for the single task.
+     */
     static Uri buildTaskUri(long taskId) {
         return ContentUris.withAppendedId(CONTENT_URI, taskId);
     }
 
+    /**
+     * Gets id of the task.
+     * @param uri uri of the task.
+     * @return id as long.
+     */
     static long getTaskId(Uri uri) {
         return ContentUris.parseId(uri);
     }
