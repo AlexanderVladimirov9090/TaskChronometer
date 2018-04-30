@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.gmail.alexander.taskchronometer.MainActivity">
     <item
-        android:id="@+id/menumain_shorDurations"
+        android:id="@+id/menumain_showDuration"
         android:icon="@android:drawable/ic_menu_view"
         android:orderInCategory="101"
         android:title="@string/menumain_showDurations"
@@ -21,8 +21,10 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/menumain_showAbout"
+        android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="103"
-        android:title="@string/menumain_about" />
+        android:title="@string/menumain_about"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menumain_generate"
         android:orderInCategory="104"
