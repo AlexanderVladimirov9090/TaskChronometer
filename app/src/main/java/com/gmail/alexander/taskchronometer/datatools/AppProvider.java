@@ -1,4 +1,4 @@
-package com.gmail.alexander.taskchronometer.databasetools;
+package com.gmail.alexander.taskchronometer.datatools;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
