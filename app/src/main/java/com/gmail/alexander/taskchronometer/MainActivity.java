@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.gmail.alexander.taskchronometer.databasetools.TasksContract;
+import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
