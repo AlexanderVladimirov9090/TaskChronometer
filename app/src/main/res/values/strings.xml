@@ -7,4 +7,5 @@
     <string name="menumain_About">About Task Chrono</string>
     <string name="menumain_about">About App</string>
     <string name="menumain_generate">Generate Data</string>
+    <string name="no_task_message">No Task Selected</string>
 </resources>
