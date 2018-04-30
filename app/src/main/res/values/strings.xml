@@ -10,4 +10,8 @@
     <string name="no_task_message">No Task Selected</string>
     <string name="edit_button_description">Button To Edit Task Description</string>
     <string name="delete_button_description">Button to delete task</string>
+    <string name="addedit_hint">Task Name: required</string>
+    <string name="addedit_description">Task Description (optional)</string>
+    <string name="addedit_sort_hint">Orders: sorts low to high</string>
+    <string name="addedit_save_text">Save</string>
 </resources>
