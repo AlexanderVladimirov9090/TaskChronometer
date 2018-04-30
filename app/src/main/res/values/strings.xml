@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">TaskChronometer</string>
     <string name="action_settings">Settings</string>
+    <string name="menutitle_addTask">Add Task</string>
+    <string name="menumain_showDurations">Durations Report</string>
+    <string name="menumain_showAbout">About TaskChronometer</string>
+    <string name="menumain_About">About Task Chrono</string>
+    <string name="menumain_about">About App</string>
+    <string name="menumain_generate">Generate Data</string>
 </resources>
