@@ -3,6 +3,9 @@ package com.gmail.alexander.taskchronometer.datatools;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by:
@@ -46,6 +49,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + TasksContract.Columns.TASKS_NAME + " TEXT NOT NULL, "
                 + TasksContract.Columns.TASKS_DESCRIPTION + " TEXT, "
                 + TasksContract.Columns.TASKS_SORTORDER + " INTEGER);";
+        Log.d(TAG, statement);
         db.execSQL(statement);
     }
 

@@ -41,7 +41,7 @@ public class TasksContract {
      * @param taskId id of the task
      * @return URI for the single task.
      */
-    static Uri buildTaskUri(long taskId) {
+    public static Uri buildTaskUri(long taskId) {
         return ContentUris.withAppendedId(CONTENT_URI, taskId);
     }
 

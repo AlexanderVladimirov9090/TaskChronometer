@@ -21,8 +21,8 @@
         </activity>
 
         <provider
-            android:name=".datatools.AppProvider"
-            android:authorities="com.gmail.alexander.taskchronometer.datatools.provider"
+            android:name="com.gmail.alexander.taskchronometer.datatools.AppProvider"
+            android:authorities="com.gmail.alexander.taskchronometer.datatools"
             android:exported="false" />
 
         <activity

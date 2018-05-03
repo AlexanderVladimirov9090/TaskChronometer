@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import static com.gmail.alexander.taskchronometer.activities.AddEditActivity.TAG;
 
 /**
  * Created by:
@@ -22,7 +25,7 @@ public class AppProvider extends ContentProvider {
 
     private static final UriMatcher uriMatcher = buildUriMatcher();
 
-    static final String CONTENT_AUTHORITY = "com.gmail.alexander.taskchronometer.databasetools.provider";
+    static final String CONTENT_AUTHORITY = "com.gmail.alexander.taskchronometer.datatools";
     public static final Uri CONTENT_AUTHORITY_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final int TASKS = 100;
@@ -171,6 +174,7 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+        Log.d(TAG, "Exiting insert, returning " + returnUri);
         return returnUri;
 
     }
