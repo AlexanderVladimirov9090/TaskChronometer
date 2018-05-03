@@ -7,7 +7,8 @@ import android.support.v7.widget.Toolbar;
 import com.gmail.alexander.taskchronometer.R;
 
 public class AddEditActivity extends AppCompatActivity {
-        public static final String TAG = "AddEditActivity";
+    public static final String TAG = "AddEditActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
