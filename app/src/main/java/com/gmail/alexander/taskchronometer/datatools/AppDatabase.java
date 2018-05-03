@@ -41,6 +41,10 @@ public class AppDatabase extends SQLiteOpenHelper {
         return instance;
     }
 
+    /**
+     * This is where TaskS table is created.
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String statement;
@@ -53,6 +57,12 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL(statement);
     }
 
+    /**
+     * This is used for when there is an upgrade to the database.
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {

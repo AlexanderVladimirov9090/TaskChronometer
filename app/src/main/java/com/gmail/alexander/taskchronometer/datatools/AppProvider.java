@@ -17,6 +17,7 @@ import static com.gmail.alexander.taskchronometer.activities.AddEditActivity.TAG
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
+ *     This is the content provider for the application.
  */
 
 public class AppProvider extends ContentProvider {
@@ -140,6 +141,12 @@ public class AppProvider extends ContentProvider {
         }
     }
 
+    /**
+     * Inserts record ot the database.
+     * @param uri
+     * @param values
+     * @return
+     */
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -179,6 +186,13 @@ public class AppProvider extends ContentProvider {
 
     }
 
+    /**
+     * Deletes record from the database.
+     * @param uri
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);
@@ -227,6 +241,14 @@ public class AppProvider extends ContentProvider {
         return count;
     }
 
+    /**
+     * Updates selected record.
+     * @param uri
+     * @param values
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);

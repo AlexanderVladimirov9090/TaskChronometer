@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
- *    This is the representative of the data from the database.
+ * This is the domain class of Task that is represented in the database.
  */
 public class Task implements Serializable {
     public static final long serialVersionUID = 29161120L;

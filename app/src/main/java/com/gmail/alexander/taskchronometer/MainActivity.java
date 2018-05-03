@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 
+/**
+ * This is the starting point of the application.
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 

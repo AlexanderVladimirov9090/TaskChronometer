@@ -12,6 +12,8 @@ import static com.gmail.alexander.taskchronometer.datatools.AppProvider.CONTENT_
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
+ *     This class is used for consistency and convenience
+ *     about logic used for database operatoins.
  */
 
 public class TasksContract {
