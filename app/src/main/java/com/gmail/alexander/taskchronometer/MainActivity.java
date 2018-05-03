@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id){
             case R.id.menumain_addTask:
+                taskEditRequest(null);
                 break;
             case R.id.menumain_showDuration:
                 break;
