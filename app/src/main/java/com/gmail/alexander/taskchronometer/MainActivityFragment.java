@@ -4,11 +4,16 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+
+import java.security.InvalidParameterException;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -29,7 +34,20 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        Log.d(TAG, "onCreateLoader: starts with  id: " + id);
+        String[] projection = {
+                TasksContract.Columns._ID,
+                TasksContract.Columns.TASKS_NAME,
+                TasksContract.Columns.TASKS_DESCRIPTION,
+                TasksContract.Columns.TASKS_SORTORDER};
+        String sortOrder = TasksContract.Columns.TASKS_SORTORDER+","+ TasksContract.Columns.TASKS_NAME;
+        switch (id) {
+            case LOADER_ID:
+                return new CursorLoader(getActivity(), TasksContract.CONTENT_URI, projection, null,null,sortOrder);
+
+            default:
+                throw new InvalidParameterException(TAG + "onCreateLoader called with invalid id: " + id);
+        }
     }
 
     @Override
