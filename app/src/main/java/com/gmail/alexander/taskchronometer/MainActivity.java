@@ -16,7 +16,7 @@ import com.gmail.alexander.taskchronometer.domain_layer.Task;
  */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    // Whether or not thje activity is in 2-pane mode
+    // Whether or not th    e activity is in 2-pane mode
     // i.e. running in landscape on a tablet
     //If landscape is on for tablets
     private boolean twoPane=false;
@@ -32,13 +32,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This is where the menu is created.
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * This is where the select item from menu is executed.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -65,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    /**
+     * This method is checking if Two-pane mode active or not.
+     * @param task
+     */
     private void taskEditRequest(Task task){
         Log.d(TAG, "taskEditRequest: ");
         if(twoPane){
