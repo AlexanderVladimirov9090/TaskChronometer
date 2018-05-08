@@ -76,7 +76,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         }
         count = data.getCount();
-        Log.d(TAG, "onLoadFinished: Count is" + count);
+        Log.d(TAG, "onLoadFinished: Count is: " + count);
     }
 
     @Override
