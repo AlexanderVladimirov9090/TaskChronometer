@@ -1,5 +1,6 @@
 package com.gmail.alexander.taskchronometer.adapters;
 
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -9,8 +10,9 @@ import android.view.ViewGroup;
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
  */
-public class CursorRecyclerView extends RecyclerView.Adapter<TaskViewHolder>{
-
+public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHolder>{
+    private static final String TAG ="CursorRecycleViewAdapter";
+    private Cursor cursor;
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return null;
