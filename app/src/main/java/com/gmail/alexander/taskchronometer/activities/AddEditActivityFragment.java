@@ -33,6 +33,13 @@ public class AddEditActivityFragment extends Fragment {
     public AddEditActivityFragment() {
     }
 
+    /**
+     * This is where the add edit task is done.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {

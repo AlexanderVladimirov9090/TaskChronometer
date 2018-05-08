@@ -15,6 +15,7 @@ import com.gmail.alexander.taskchronometer.datatools.TasksContract;
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
+ *     This adapter is used for the Recycler View.
  */
 public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHolder> {
     private static final String TAG = "CursorRecycleAdapter";
@@ -32,13 +33,18 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
         return new TaskViewHolder(view);
     }
 
+    /**
+     * This is where the binding data to the view.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: Starts");
         if ((cursor == null) || cursor.getCount() == 0) {
             Log.d(TAG, "onBindViewHolder: Providing Instructions");
             holder.name.setText("Instructions");
-            holder.decription.setText(R.string.user_instruction);
+            holder.description.setText(R.string.user_instruction);
             holder.editButton.setVisibility(View.GONE);
             holder.deleteButton.setVisibility(View.GONE);
 
@@ -47,18 +53,22 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
                 throw new IllegalStateException("Couldn`t move cursor to position: " + position);
             }
             holder.name.setText(cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASKS_NAME)));
-            holder.decription.setText(cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASKS_DESCRIPTION)));
+            holder.description.setText(cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASKS_DESCRIPTION)));
             holder.editButton.setVisibility(View.VISIBLE);
             holder.deleteButton.setVisibility(View.VISIBLE);
         }
 
     }
 
+    /**
+     * This is where counting of the items is done.
+     * @return counted times.
+     */
     @Override
     public int getItemCount() {
         Log.d(TAG, "getItemCount: Starts");
         if (cursor == null || cursor.getCount() == 0) {
-            return 1;//fib, because we populate a single ViewHolder with instructions.
+            return 1;
         } else {
             return cursor.getCount();
         }

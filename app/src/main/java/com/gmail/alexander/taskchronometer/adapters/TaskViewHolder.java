@@ -12,17 +12,18 @@ import com.gmail.alexander.taskchronometer.R;
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
+ *     This is the task view holder used for Recycler View Adapter.
  */
 class TaskViewHolder extends RecyclerView.ViewHolder {
     TextView name = null;
-    TextView decription = null;
+    TextView description = null;
     ImageButton editButton = null;
     ImageButton deleteButton = null;
 
     public TaskViewHolder(View itemView) {
         super(itemView);
         this.name = (TextView) itemView.findViewById(R.id.til_name);
-        this.decription = (TextView) itemView.findViewById(R.id.til_description);
+        this.description = (TextView) itemView.findViewById(R.id.til_description);
         this.editButton = (ImageButton) itemView.findViewById(R.id.til_edit);
         this.deleteButton = (ImageButton) itemView.findViewById(R.id.til_delete);
     }

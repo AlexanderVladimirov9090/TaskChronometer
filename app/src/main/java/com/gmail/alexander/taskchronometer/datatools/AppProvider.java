@@ -17,7 +17,7 @@ import static com.gmail.alexander.taskchronometer.activities.AddEditActivity.TAG
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
- *     This is the content provider for the application.
+ * This is the content provider for the application.
  */
 
 public class AppProvider extends ContentProvider {
@@ -62,6 +62,7 @@ public class AppProvider extends ContentProvider {
 
         return matcher;
     }
+
     @Override
     public boolean onCreate() {
         openHelper = AppDatabase.getInstance(getContext());
@@ -75,7 +76,7 @@ public class AppProvider extends ContentProvider {
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
-        switch(match) {
+        switch (match) {
             case TASKS:
                 queryBuilder.setTables(TasksContract.TABLE_NAME);
                 break;
@@ -112,7 +113,11 @@ public class AppProvider extends ContentProvider {
         }
 
         SQLiteDatabase db = openHelper.getReadableDatabase();
-        return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        //return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        Log.d(TAG, "query: rows in returned cursor= " + cursor.getCount());
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Nullable
@@ -145,6 +150,7 @@ public class AppProvider extends ContentProvider {
 
     /**
      * Inserts record ot the database.
+     *
      * @param uri
      * @param values
      * @return
@@ -159,11 +165,11 @@ public class AppProvider extends ContentProvider {
         Uri returnUri;
         long recordId;
 
-        switch(match) {
+        switch (match) {
             case TASKS:
                 database = openHelper.getWritableDatabase();
                 recordId = database.insert(TasksContract.TABLE_NAME, null, values);
-                if(recordId >=0) {
+                if (recordId >= 0) {
                     returnUri = TasksContract.buildTaskUri(recordId);
                 } else {
                     throw new android.database.SQLException("Failed to insert into " + uri.toString());
@@ -183,6 +189,13 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+        if (recordId >= 0) {
+
+            Log.d(TAG, "insert: Setting notify change " + uri);
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
+            Log.d(TAG, "insert: Inserted: nothing is inserted");
+        }
         Log.d(TAG, "Exiting insert, returning " + returnUri);
         return returnUri;
 
@@ -190,6 +203,7 @@ public class AppProvider extends ContentProvider {
 
     /**
      * Deletes record from the database.
+     *
      * @param uri
      * @param selection
      * @param selectionArgs
@@ -204,7 +218,7 @@ public class AppProvider extends ContentProvider {
 
         String selectionCriteria;
 
-        switch(match) {
+        switch (match) {
             case TASKS:
                 database = openHelper.getWritableDatabase();
                 count = database.delete(TasksContract.TABLE_NAME, selection, selectionArgs);
@@ -215,7 +229,7 @@ public class AppProvider extends ContentProvider {
                 long taskId = TasksContract.getTaskId(uri);
                 selectionCriteria = TasksContract.Columns._ID + " = " + taskId;
 
-                if((selection != null) && (selection.length()>0)) {
+                if ((selection != null) && (selection.length() > 0)) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
                 count = database.delete(TasksContract.TABLE_NAME, selectionCriteria, selectionArgs);
@@ -240,11 +254,18 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+        if (count > 0) {
+            Log.d(TAG, "delete: Notify change whit uri: "+uri);
+            getContext().getContentResolver().notifyChange(uri,null);
+        }else {
+            Log.d(TAG, "delete: Noting is deleted.");
+        }
         return count;
     }
 
     /**
      * Updates selected record.
+     *
      * @param uri
      * @param values
      * @param selection
@@ -260,7 +281,7 @@ public class AppProvider extends ContentProvider {
 
         String selectionCriteria;
 
-        switch(match) {
+        switch (match) {
             case TASKS:
                 database = openHelper.getWritableDatabase();
                 count = database.update(TasksContract.TABLE_NAME, values, selection, selectionArgs);
@@ -271,7 +292,7 @@ public class AppProvider extends ContentProvider {
                 long taskId = TasksContract.getTaskId(uri);
                 selectionCriteria = TasksContract.Columns._ID + " = " + taskId;
 
-                if((selection != null) && (selection.length()>0)) {
+                if ((selection != null) && (selection.length() > 0)) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
                 count = database.update(TasksContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
@@ -296,6 +317,13 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+        if (count > 0) {
+            Log.d(TAG, "update: Notify change whit uri: "+uri);
+            getContext().getContentResolver().notifyChange(uri,null);
+        }else {
+            Log.d(TAG, "update: Noting is updated.");
+        }
+
         return count;
     }
 }
