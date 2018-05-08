@@ -20,6 +20,10 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
     private static final String TAG = "CursorRecycleAdapter";
     private Cursor cursor;
 
+    public CursorRecyclerViewAdapter(Cursor cursor) {
+        this.cursor = cursor;
+    }
+
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: New view requested");
@@ -68,7 +72,7 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
      * @return Returns the previously set Cursor, or null if is there wasn`t one.
      * If the given new Cursor is the same instance as the previously set Cursor, null is also returned.
      */
-    Cursor swapCursor(Cursor newCursor) {
+   public Cursor swapCursor(Cursor newCursor) {
         if (newCursor == cursor) {
             return null;
         }
