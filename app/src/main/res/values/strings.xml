@@ -14,4 +14,5 @@
     <string name="addedit_description">Task Description (optional)</string>
     <string name="addedit_sort_hint">Orders: sorts low to high</string>
     <string name="addedit_save_text">Save</string>
+    <string name="user_instruction">Use the add button (+) in the toolbar above to create new task. Task with lower sort order will be placed higher up the list. Task with the same sort order will be sorted alphabetically. Tapping a task will start the timer fot that task (and will stop the timer for previously task that was being timed). Each task has Edit and Delete buttons if you want to change details or remote the task.</string>
 </resources>

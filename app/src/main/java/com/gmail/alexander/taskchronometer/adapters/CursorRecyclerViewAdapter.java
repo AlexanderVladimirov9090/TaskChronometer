@@ -34,7 +34,7 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
         if ((cursor == null) || cursor.getCount() == 0) {
             Log.d(TAG, "onBindViewHolder: Providing Instructions");
             holder.name.setText("Instructions");
-            holder.decription.setText("Use the add button (+) in the toolbar above to create new task.\nTask with lower sort order will be placed higher up the list.\nTask with the same sort order will be sorted alphabetically.\nTapping a task will start the timer fot that task (and will stop the timer for previously task that was being timed).\nEach task has Edit and Delete buttons if you want to change details or remote the task.");
+            holder.decription.setText(R.string.user_instruction);
             holder.editButton.setVisibility(View.GONE);
             holder.deleteButton.setVisibility(View.GONE);
 
