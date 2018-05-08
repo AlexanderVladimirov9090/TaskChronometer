@@ -12,6 +12,8 @@ import static com.gmail.alexander.taskchronometer.datatools.AppProvider.CONTENT_
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
+ *     This class is used for consistency and convenience
+ *     about logic used for database operatoins.
  */
 
 public class TasksContract {
@@ -24,7 +26,7 @@ public class TasksContract {
         public static final String TASKS_SORTORDER = "SortOrder";
 
         private Columns() {
-            // private constructor to prevent instantiation
+
         }
     }
 
@@ -41,7 +43,7 @@ public class TasksContract {
      * @param taskId id of the task
      * @return URI for the single task.
      */
-    static Uri buildTaskUri(long taskId) {
+    public static Uri buildTaskUri(long taskId) {
         return ContentUris.withAppendedId(CONTENT_URI, taskId);
     }
 
