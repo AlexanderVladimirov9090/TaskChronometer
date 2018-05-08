@@ -8,16 +8,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.gmail.alexander.taskchronometer.persistence_layer.Task;
+import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
+import com.gmail.alexander.taskchronometer.domain_layer.Task;
 
+/**
+ * This is the starting point of the application.
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     // Whether or not thje activity is in 2-pane mode
     // i.e. running in landscape on a tablet
-    private boolean mTwoPane = false;
+    //If landscape is on for tablets
+    private boolean twoPane=false;
 
-    private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
-
+    private static final String ADD_EDIT_FRAGMENT= "AddEditFragment";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch(id) {
+
+        switch (id){
             case R.id.menumain_addTask:
                 taskEditRequest(null);
                 break;
@@ -57,21 +62,22 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menumain_generate:
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
-    private void taskEditRequest(Task task) {
-        Log.d(TAG, "taskEditRequest: starts");
-        if(mTwoPane) {
-            Log.d(TAG, "taskEditRequest: in two-pane mode (tablet)");
-        } else {
-            Log.d(TAG, "taskEditRequest: in single-pane mode (phone)");
-            // in single-pane mode, start the detail activity for the selected item Id.
+
+
+    private void taskEditRequest(Task task){
+        Log.d(TAG, "taskEditRequest: ");
+        if(twoPane){
+            Log.d(TAG, "taskEditRequest: Two-pane mode");
+        }else {
+            Log.d(TAG, "taskEditRequest: single-pane mode");
             Intent detailIntent = new Intent(this, AddEditActivity.class);
-            if(task != null) { // editing a task
-                detailIntent.putExtra(Task.class.getSimpleName(), task);
+            if (task != null){
+                detailIntent.putExtra(com.gmail.alexander.taskchronometer.domain_layer.Task.class.getName(),task);
                 startActivity(detailIntent);
-            } else { // adding a new task
+            }else {
+
                 startActivity(detailIntent);
             }
         }
