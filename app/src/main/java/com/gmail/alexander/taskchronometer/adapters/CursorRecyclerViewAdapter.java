@@ -52,6 +52,35 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
 
     @Override
     public int getItemCount() {
-        return 0;
+        Log.d(TAG, "getItemCount: Starts");
+        if (cursor == null || cursor.getCount() == 0) {
+            return 1;//fib, because we populate a single ViewHolder with instructions.
+        } else {
+            return cursor.getCount();
+        }
+    }
+
+    /**
+     * Swap in a new Cursor, returning the old Cursor.
+     * The returned old Cursor is not closed.
+     *
+     * @param newCursor the new cursor to be used.
+     * @return Returns the previously set Cursor, or null if is there wasn`t one.
+     * If the given new Cursor is the same instance as the previously set Cursor, null is also returned.
+     */
+    Cursor swapCursor(Cursor newCursor) {
+        if (newCursor == cursor) {
+            return null;
+        }
+        final Cursor oldCursor = cursor;
+        cursor = newCursor;
+        if (newCursor != null) {
+            //notify the observers about the new cursor.
+            notifyDataSetChanged();
+        } else {
+            // notify the observers about the lack of a data set.
+            notifyItemRangeRemoved(0, getItemCount());
+        }
+        return oldCursor;
     }
 }
