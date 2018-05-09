@@ -10,6 +10,7 @@ import java.io.Serializable;
  * This is the domain class of Task that is represented in the database.
  */
 public class Task implements Serializable {
+
     public static final long serialVersionUID = 29161120L;
     private long id;
     private final String name;
