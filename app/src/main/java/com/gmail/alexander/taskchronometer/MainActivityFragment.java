@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.gmail.alexander.taskchronometer.adapters.CursorRecyclerViewAdapter;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 
 import java.security.InvalidParameterException;
 
@@ -44,7 +45,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CursorRecyclerViewAdapter(null);
+        adapter = new CursorRecyclerViewAdapter(null, (OnTaskClickListener) getActivity());
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -58,7 +59,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 TasksContract.Columns.TASKS_NAME,
                 TasksContract.Columns.TASKS_DESCRIPTION,
                 TasksContract.Columns.TASKS_SORTORDER};
-        String sortOrder = TasksContract.Columns.TASKS_SORTORDER + "," + TasksContract.Columns.TASKS_NAME+ " COLLATE NOCASE";
+        String sortOrder = TasksContract.Columns.TASKS_SORTORDER + "," + TasksContract.Columns.TASKS_NAME + " COLLATE NOCASE";
         switch (id) {
             case LOADER_ID:
                 return new CursorLoader(getActivity(),

@@ -46,12 +46,10 @@ public class AppProvider extends ContentProvider {
     private static final int TASK_DURATIONS_ID = 401;
 
     private static UriMatcher buildUriMatcher() {
+
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-
         matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME, TASKS);
-
-
         matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME + "/#", TASKS_ID);
 
 //        matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS);
@@ -65,7 +63,9 @@ public class AppProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
+
         openHelper = AppDatabase.getInstance(getContext());
+
         return true;
     }
 
@@ -113,17 +113,19 @@ public class AppProvider extends ContentProvider {
         }
 
         SQLiteDatabase db = openHelper.getReadableDatabase();
-        //return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        Log.d(TAG, "query: rows in returned cursor= " + cursor.getCount());
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return cursor;
     }
 
     @Nullable
     @Override
     public String getType(Uri uri) {
+
         final int match = uriMatcher.match(uri);
+
         switch (match) {
             case TASKS:
                 return TasksContract.CONTENT_TYPE;
@@ -189,6 +191,7 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+
         if (recordId >= 0) {
 
             Log.d(TAG, "insert: Setting notify change " + uri);
@@ -196,6 +199,7 @@ public class AppProvider extends ContentProvider {
         } else {
             Log.d(TAG, "insert: Inserted: nothing is inserted");
         }
+
         Log.d(TAG, "Exiting insert, returning " + returnUri);
         return returnUri;
 
@@ -254,12 +258,14 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+
         if (count > 0) {
-            Log.d(TAG, "delete: Notify change whit uri: "+uri);
-            getContext().getContentResolver().notifyChange(uri,null);
-        }else {
+            Log.d(TAG, "delete: Notify change whit uri: " + uri);
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
             Log.d(TAG, "delete: Noting is deleted.");
         }
+
         return count;
     }
 
@@ -317,10 +323,11 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
+
         if (count > 0) {
-            Log.d(TAG, "update: Notify change whit uri: "+uri);
-            getContext().getContentResolver().notifyChange(uri,null);
-        }else {
+            Log.d(TAG, "update: Notify change whit uri: " + uri);
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
             Log.d(TAG, "update: Noting is updated.");
         }
 
