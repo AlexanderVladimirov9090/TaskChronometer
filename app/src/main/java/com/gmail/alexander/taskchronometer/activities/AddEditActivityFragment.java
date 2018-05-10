@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.gmail.alexander.taskchronometer.R;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
+import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -28,6 +29,7 @@ public class AddEditActivityFragment extends Fragment {
     private EditText descriptionText;
     private EditText sortOrderText;
     private Button saveButton;
+    private OnSaveListener onSaveListener;
 
     public AddEditActivityFragment() {
     }
