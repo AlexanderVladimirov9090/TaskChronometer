@@ -51,7 +51,9 @@ public class AddEditActivityFragment extends Fragment {
         sortOrderText = (EditText) view.findViewById(R.id.addedit_sortorder);
         saveButton = (Button) view.findViewById(R.id.addedit_save);
 
-        Bundle argument = getActivity().getIntent().getExtras();
+     //   Bundle argument = getActivity().getIntent().getExtras();
+
+     Bundle argument = getArguments();
         final Task task;
 
         if (argument != null) {
@@ -73,6 +75,7 @@ public class AddEditActivityFragment extends Fragment {
             mode = FragmentEditMode.ADD;
         }
 
+        //This is where the save button logic is.
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
