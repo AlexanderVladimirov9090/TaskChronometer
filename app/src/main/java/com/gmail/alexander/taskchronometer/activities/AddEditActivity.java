@@ -1,6 +1,8 @@
 package com.gmail.alexander.taskchronometer.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,6 +18,18 @@ public class AddEditActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        AddEditActivityFragment fragment = new AddEditActivityFragment();
+
+        Bundle arguments = getIntent().getExtras();  // The line we'll change later
+//        arguments.putSerializable(Task.class.getSimpleName(), task);
+        fragment.setArguments(arguments);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, fragment);
+        fragmentTransaction.commit();
 
     }
 

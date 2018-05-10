@@ -2,6 +2,8 @@ package com.gmail.alexander.taskchronometer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
+import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
@@ -32,6 +35,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (findViewById(R.id.task_details_container) != null) {
+            //The detail container view will be present only of the screen is large enough.
+            // If this view is present, then activity should be in two-pane mode.
+            twoPane = true;
+
+        }
 
     }
 
@@ -96,17 +106,25 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      * @param task
      */
     private void taskEditRequest(Task task) {
-        Log.d(TAG, "taskEditRequest: ");
+
         if (twoPane) {
             Log.d(TAG, "taskEditRequest: Two-pane mode");
+            AddEditActivityFragment fragment = new AddEditActivityFragment();
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(Task.class.getSimpleName(),task);
+            fragment.setArguments(arguments);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.task_details_container, fragment);
+            fragmentTransaction.commit();
         } else {
-            Log.d(TAG, "taskEditRequest: single-pane mode");
+
             Intent detailIntent = new Intent(this, AddEditActivity.class);
+
             if (task != null) {
-                detailIntent.putExtra(com.gmail.alexander.taskchronometer.domain_layer.Task.class.getName(), task);
+                detailIntent.putExtra(Task.class.getSimpleName(), task);
                 startActivity(detailIntent);
             } else {
-
                 startActivity(detailIntent);
             }
         }
