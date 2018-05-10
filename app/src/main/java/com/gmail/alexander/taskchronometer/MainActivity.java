@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             Intent detailIntent = new Intent(this, AddEditActivity.class);
 
             if (task != null) {
-                detailIntent.putExtra(com.gmail.alexander.taskchronometer.domain_layer.Task.class.getName(), task);
+                detailIntent.putExtra(Task.class.getSimpleName(), task);
                 startActivity(detailIntent);
             } else {
                 startActivity(detailIntent);
