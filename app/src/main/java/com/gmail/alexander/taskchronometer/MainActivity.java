@@ -33,6 +33,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if(findViewById(R.id.task_details_container)!=null){
+            //The detail container view will be present only of the screen is large enough.
+            // If this view is present, then activity should be in two-pane mode.
+            twoPane = true;
+
+        }
+
     }
 
     /**
@@ -96,12 +103,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      * @param task
      */
     private void taskEditRequest(Task task) {
-        Log.d(TAG, "taskEditRequest: ");
         if (twoPane) {
             Log.d(TAG, "taskEditRequest: Two-pane mode");
         } else {
-            Log.d(TAG, "taskEditRequest: single-pane mode");
-            Intent detailIntent = new Intent(this, AddEditActivity.class);
+                      Intent detailIntent = new Intent(this, AddEditActivity.class);
             if (task != null) {
                 detailIntent.putExtra(com.gmail.alexander.taskchronometer.domain_layer.Task.class.getName(), task);
                 startActivity(detailIntent);
