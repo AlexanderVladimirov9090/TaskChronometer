@@ -13,7 +13,7 @@ You will need Android Marshmallow ot above to run this application.
 ##Build With
 
 * [Gradle](https://gradle.org/) - Dependency Management
-* [Java] (https://www.java.com/en/) - Language
+* [Java](https://www.java.com/en/) - Language
 
 
 ##Authors
