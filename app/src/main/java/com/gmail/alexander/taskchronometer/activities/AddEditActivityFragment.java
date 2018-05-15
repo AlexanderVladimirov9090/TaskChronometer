@@ -39,6 +39,7 @@ public class AddEditActivityFragment extends Fragment {
 
     /**
      * Initialize onSaveListener, if not provided correctly throws ClassCastException.
+     *
      * @param context
      */
     @Override
@@ -145,6 +146,9 @@ public class AddEditActivityFragment extends Fragment {
 
                         }
                         break;
+                }
+                if (onSaveListener != null) {
+                    onSaveListener.onSaveClicked();
                 }
             }
 

@@ -2,8 +2,8 @@ package com.gmail.alexander.taskchronometer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,12 +14,13 @@ import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
+import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 
 /**
  * This is the starting point of the application.
  */
-public class MainActivity extends AppCompatActivity implements OnTaskClickListener {
+public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener {
     private static final String TAG = "MainActivity";
     // Whether or not th    e activity is in 2-pane mode
     // i.e. running in landscape on a tablet
@@ -111,12 +112,12 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             Log.d(TAG, "taskEditRequest: Two-pane mode");
             AddEditActivityFragment fragment = new AddEditActivityFragment();
             Bundle arguments = new Bundle();
-            arguments.putSerializable(Task.class.getSimpleName(),task);
+            arguments.putSerializable(Task.class.getSimpleName(), task);
             fragment.setArguments(arguments);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.task_details_container, fragment);
-            fragmentTransaction.commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.task_details_container, fragment)
+                    .commit();
         } else {
 
             Intent detailIntent = new Intent(this, AddEditActivity.class);
@@ -127,6 +128,19 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             } else {
                 startActivity(detailIntent);
             }
+        }
+    }
+
+    @Override
+    public void onSaveClicked() {
+        Log.d(TAG, "onSaveClicked: Starts");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
         }
     }
 }

@@ -7,5 +7,5 @@ package com.gmail.alexander.taskchronometer.listeners;
  * <alexandervladimirov1902@gmail.com>
  */
 public interface OnSaveListener {
-    void OnSaveClicked();
+    void onSaveClicked();
 }
