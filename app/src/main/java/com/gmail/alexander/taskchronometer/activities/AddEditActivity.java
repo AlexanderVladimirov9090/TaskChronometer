@@ -7,8 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.gmail.alexander.taskchronometer.R;
+import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 
-public class AddEditActivity extends AppCompatActivity {
+public class AddEditActivity extends AppCompatActivity implements OnSaveListener {
     public static final String TAG = "AddEditActivity";
 
     @Override
@@ -33,4 +34,8 @@ public class AddEditActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveClicked() {
+        finish();
+    }
 }
