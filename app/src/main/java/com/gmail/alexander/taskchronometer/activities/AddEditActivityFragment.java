@@ -1,9 +1,12 @@
 package com.gmail.alexander.taskchronometer.activities;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,33 @@ public class AddEditActivityFragment extends Fragment {
     }
 
     /**
+     * Initialize onSaveListener, if not provided correctly throws ClassCastException.
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        Log.d(TAG, "onAttach: Starts");
+        super.onAttach(context);
+        //Activities containing this fragment must implement it`s callback.
+        Activity activity = getActivity();
+        if (!(activity instanceof OnSaveListener)) {
+            throw new ClassCastException(activity.getClass().getSimpleName() + " must be implemented OnClickListener interface.");
+        }
+        onSaveListener = (OnSaveListener) activity;
+
+    }
+
+    /**
+     * Clear the reference onSavedListener.
+     */
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: Starts");
+        super.onDetach();
+        onSaveListener = null;
+    }
+
+    /**
      * This is where the add edit task is done.
      *
      * @param inflater
@@ -53,9 +83,9 @@ public class AddEditActivityFragment extends Fragment {
         sortOrderText = (EditText) view.findViewById(R.id.addedit_sortorder);
         saveButton = (Button) view.findViewById(R.id.addedit_save);
 
-     //   Bundle argument = getActivity().getIntent().getExtras();
+        //   Bundle argument = getActivity().getIntent().getExtras();
 
-     Bundle argument = getArguments();
+        Bundle argument = getArguments();
         final Task task;
 
         if (argument != null) {
