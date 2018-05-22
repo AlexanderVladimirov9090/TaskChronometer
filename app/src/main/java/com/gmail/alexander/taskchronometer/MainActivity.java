@@ -22,7 +22,7 @@ import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 /**
  * This is the starting point of the application.
  */
-public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener, DialogEvents{
+public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener, DialogEvents {
     private static final String TAG = "MainActivity";
     // Whether or not th    e activity is in 2-pane mode
     // i.e. running in landscape on a tablet
@@ -106,10 +106,9 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         args.putInt(AppDialog.DIALOG_ID, DELETE_DIALOG_ID);
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.delete_notification_message, task.getId(), task.getName()));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.del_dialog_positive_caption);
+        args.putLong("TaskID", task.getId());
         appDialog.setArguments(args);
         appDialog.show(getFragmentManager(), null);
-
-        getContentResolver().delete(TasksContract.buildTaskUri(task.getId()), null, null);
     }
 
     /**
@@ -155,18 +154,39 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         }
     }
 
+    /**
+     * Deletion of task is handled here when dialog box is tapped delete button.
+     * @param dialogId
+     * @param args
+     */
     @Override
     public void onPositiveDialogResult(int dialogId, Bundle args) {
         Log.d(TAG, "onPositiveDialogResult: Starts");
+
+        Long taskId = args.getLong("TaskID");
+        if (BuildConfig.DEBUG && taskId == 0) {
+            throw new AssertionError("Task ID is zero");
+        }
+        getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
     }
 
+    /**
+     * This method is fired when tapped cancel on the dialog box.
+     * @param dialogId
+     * @param args
+     */
     @Override
     public void onNegativeDialogResult(int dialogId, Bundle args) {
-        Log.d(TAG, "onNegativeDialogResult: Starts");
+        Log.d(TAG, "onNegativeDialogResult: called");
+
     }
 
+    /**
+     * This method is fired when dialog is cancelled.
+     * @param dialogId
+     */
     @Override
     public void onDialogCancelled(int dialogId) {
-        Log.d(TAG, "onDialogCancelled: Starts");
+        Log.d(TAG, "onDialogCancelled: called");
     }
 }
