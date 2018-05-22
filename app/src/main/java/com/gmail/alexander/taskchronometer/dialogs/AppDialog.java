@@ -109,6 +109,10 @@ public class AppDialog extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Handles cancel action of the dialog box for deletion.
+     * @param dialog
+     */
     @Override
     public void onCancel(DialogInterface dialog) {
         Log.d(TAG, "onCancel: Called");
@@ -118,6 +122,10 @@ public class AppDialog extends DialogFragment {
         }
     }
 
+    /**
+     * Handles the dismiss action for the dialog button.
+     * @param dialog
+     */
     @Override
     public void onDismiss(DialogInterface dialog) {
         Log.d(TAG, "onDismiss: Called.");

@@ -9,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import com.gmail.alexander.taskchronometer.R;
 import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 
+/**
+ * This class is used for  add and edit of the task actions.
+ */
 public class AddEditActivity extends AppCompatActivity implements OnSaveListener {
     public static final String TAG = "AddEditActivity";
 
@@ -34,6 +37,9 @@ public class AddEditActivity extends AppCompatActivity implements OnSaveListener
 
     }
 
+    /**
+     * Finishes the intent that is used to call this class.
+     */
     @Override
     public void onSaveClicked() {
         finish();
