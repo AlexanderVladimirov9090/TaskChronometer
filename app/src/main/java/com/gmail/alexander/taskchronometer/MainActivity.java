@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
     public static final int DELETE_DIALOG_ID = 1;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -94,11 +95,19 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Fires taskEditRequest for editing a task.
+     * @param task
+     */
     @Override
     public void onEditClick(Task task) {
         taskEditRequest(task);
     }
 
+    /**
+     * Prompts user in form of dialog box for deletion of a task.
+     * @param task
+     */
     @Override
     public void onDeleteClick(Task task) {
         AppDialog appDialog = new AppDialog();
@@ -112,7 +121,62 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     }
 
     /**
-     * This method is checking if Two-pane mode active or not.
+     * Saves task in to database.
+     *
+     */
+    @Override
+    public void onSaveClicked() {
+        Log.d(TAG, "onSaveClicked: Starts");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+    }
+
+    /**
+     * Deletion of task is handled here when dialog box is tapped delete button.
+     *
+     * @param dialogId
+     * @param args
+     */
+    @Override
+    public void onPositiveDialogResult(int dialogId, Bundle args) {
+        Long taskId = args.getLong("TaskID");
+        if (BuildConfig.DEBUG && taskId == 0) {
+            throw new AssertionError("Task ID is zero");
+        }
+        getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
+    }
+
+    /**
+     * This method is fired when tapped cancel on the dialog box.
+     *
+     * @param dialogId
+     * @param args
+     */
+    @Override
+    public void onNegativeDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onNegativeDialogResult: called");
+
+    }
+
+    /**
+     * This method is fired when dialog is cancelled.
+     *
+     * @param dialogId
+     */
+    @Override
+    public void onDialogCancelled(int dialogId) {
+        Log.d(TAG, "onDialogCancelled: called");
+    }
+
+    /**
+     * This is fired when user want to edit a task.
+     * Using Two-pane mode if the screen size allows it.
      *
      * @param task
      */
@@ -139,54 +203,5 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 startActivity(detailIntent);
             }
         }
-    }
-
-    @Override
-    public void onSaveClicked() {
-        Log.d(TAG, "onSaveClicked: Starts");
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
-        if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(fragment)
-                    .commit();
-        }
-    }
-
-    /**
-     * Deletion of task is handled here when dialog box is tapped delete button.
-     * @param dialogId
-     * @param args
-     */
-    @Override
-    public void onPositiveDialogResult(int dialogId, Bundle args) {
-        Log.d(TAG, "onPositiveDialogResult: Starts");
-
-        Long taskId = args.getLong("TaskID");
-        if (BuildConfig.DEBUG && taskId == 0) {
-            throw new AssertionError("Task ID is zero");
-        }
-        getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
-    }
-
-    /**
-     * This method is fired when tapped cancel on the dialog box.
-     * @param dialogId
-     * @param args
-     */
-    @Override
-    public void onNegativeDialogResult(int dialogId, Bundle args) {
-        Log.d(TAG, "onNegativeDialogResult: called");
-
-    }
-
-    /**
-     * This method is fired when dialog is cancelled.
-     * @param dialogId
-     */
-    @Override
-    public void onDialogCancelled(int dialogId) {
-        Log.d(TAG, "onDialogCancelled: called");
     }
 }
