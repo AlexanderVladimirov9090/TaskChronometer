@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
+import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
@@ -20,7 +22,7 @@ import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 /**
  * This is the starting point of the application.
  */
-public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener {
+public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener, DialogEvents{
     private static final String TAG = "MainActivity";
     // Whether or not th    e activity is in 2-pane mode
     // i.e. running in landscape on a tablet
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     private boolean twoPane = false;
 
     private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
+    public static final int DELETE_DIALOG_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
 
     @Override
     public void onDeleteClick(Task task) {
+        AppDialog appDialog = new AppDialog();
+        Bundle args = new Bundle();
+        args.putInt(AppDialog.DIALOG_ID, DELETE_DIALOG_ID);
+        args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.delete_notification_message, task.getId(), task.getName()));
+        args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.del_dialog_positive_caption);
+        appDialog.setArguments(args);
+        appDialog.show(getFragmentManager(), null);
+
         getContentResolver().delete(TasksContract.buildTaskUri(task.getId()), null, null);
     }
 
@@ -142,5 +153,20 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                     .remove(fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onPositiveDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onPositiveDialogResult: Starts");
+    }
+
+    @Override
+    public void onNegativeDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onNegativeDialogResult: Starts");
+    }
+
+    @Override
+    public void onDialogCancelled(int dialogId) {
+        Log.d(TAG, "onDialogCancelled: Starts");
     }
 }
