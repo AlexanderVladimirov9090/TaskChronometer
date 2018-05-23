@@ -146,10 +146,16 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     @Override
     public void onPositiveDialogResult(int dialogId, Bundle args) {
         Long taskId = args.getLong("TaskID");
-        if (BuildConfig.DEBUG && taskId == 0) {
-            throw new AssertionError("Task ID is zero");
+        switch (dialogId) {
+            case DIALOG_ID_DELETE:
+                if (BuildConfig.DEBUG && taskId == 0) {
+                    throw new AssertionError("Task ID is zero");
+                }
+                getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
+                break;
+            case DIALOG_ID_CANCEL_EDIT:
+                break;
         }
-        getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
     }
 
     /**
@@ -161,7 +167,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     @Override
     public void onNegativeDialogResult(int dialogId, Bundle args) {
         Log.d(TAG, "onNegativeDialogResult: called");
-
+        switch (dialogId) {
+            case DIALOG_ID_DELETE:
+                break;
+            case DIALOG_ID_CANCEL_EDIT:
+                finish();
+                break;
+        }
     }
 
     /**

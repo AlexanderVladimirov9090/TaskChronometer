@@ -142,6 +142,7 @@ public class AddEditActivityFragment extends Fragment {
                         if (values.size() != 0) {
                             contentResolver.update(TasksContract.buildTaskUri(task.getId()), values, null, null);
                         }
+                        break;
                     case ADD:
                         if (nameText.length() > 0) {
                             values.put(TasksContract.Columns.TASKS_NAME, nameText.getText().toString());
