@@ -25,8 +25,8 @@ public class AddEditActivityFragment extends Fragment {
     private static final String TAG = "AddEditActivityFragment";
 
 
-
     public enum FragmentEditMode {EDIT, ADD;}
+
     private FragmentEditMode mode;
 
     private EditText nameText;
@@ -35,6 +35,7 @@ public class AddEditActivityFragment extends Fragment {
     private EditText sortOrderText;
     private Button saveButton;
     private OnSaveListener onSaveListener;
+
     public AddEditActivityFragment() {
     }
 

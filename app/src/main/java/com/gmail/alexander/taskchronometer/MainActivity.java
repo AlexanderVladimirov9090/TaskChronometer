@@ -186,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         Log.d(TAG, "onDialogCancelled: called");
     }
 
+    /**
+     * Handles action when back button is pressed.
+     */
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed: Starts");
