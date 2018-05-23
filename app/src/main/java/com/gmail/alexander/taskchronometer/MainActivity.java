@@ -29,9 +29,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     //If landscape is on for tablets
     private boolean twoPane = false;
 
-    private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
-    public static final int DELETE_DIALOG_ID = 1;
-
+    public static final int DIALOG_ID_DELETE = 1;
+    public static final int DIALOG_ID_CANCEL_EDIT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
 
     /**
      * Fires taskEditRequest for editing a task.
+     *
      * @param task
      */
     @Override
@@ -106,13 +106,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
 
     /**
      * Prompts user in form of dialog box for deletion of a task.
+     *
      * @param task
      */
     @Override
     public void onDeleteClick(Task task) {
         AppDialog appDialog = new AppDialog();
         Bundle args = new Bundle();
-        args.putInt(AppDialog.DIALOG_ID, DELETE_DIALOG_ID);
+        args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_DELETE);
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.delete_notification_message, task.getId(), task.getName()));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.del_dialog_positive_caption);
         args.putLong("TaskID", task.getId());
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
 
     /**
      * Saves task in to database.
-     *
      */
     @Override
     public void onSaveClicked() {
@@ -172,6 +172,26 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     @Override
     public void onDialogCancelled(int dialogId) {
         Log.d(TAG, "onDialogCancelled: called");
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed: Starts");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddEditActivityFragment fragment = (AddEditActivityFragment) fragmentManager.findFragmentById(R.id.task_details_container);
+        if ((fragment == null) || fragment.canClose()) {
+            super.onBackPressed();
+        } else {
+            //show dialog to get confirmation to quit editing.
+            AppDialog dialog = new AppDialog();
+            Bundle args = new Bundle();
+            args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_CANCEL_EDIT);
+            args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
+            args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
+            args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);
+            dialog.setArguments(args);
+            dialog.show(getFragmentManager(), null);
+        }
     }
 
     /**

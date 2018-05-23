@@ -122,13 +122,13 @@ public class AppDialog extends DialogFragment {
         }
     }
 
-    /**
+   /* *//**
      * Handles the dismiss action for the dialog button.
      * @param dialog
-     */
+     *//*
     @Override
     public void onDismiss(DialogInterface dialog) {
         Log.d(TAG, "onDismiss: Called.");
         super.onDismiss(dialog);
-    }
+    }*/
 }

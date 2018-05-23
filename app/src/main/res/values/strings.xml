@@ -22,5 +22,8 @@
     <string name="cancel">Cancel</string>
     <string name="del_dialog_positive_caption">Delete</string>
     <string name="delete_notification_message">Deleting will also delete all timing data associated with task id %1$d: %2$s.</string>
+    <string name="canclerEditDiag_message">You have unsaved data, do you want to continue.</string>
+    <string name="cancleEditDiag_positive_caption">Continue Editing</string>
+    <string name="cancleEditDiag_negative_caption">Abandoned Changes</string>
 
 </resources>

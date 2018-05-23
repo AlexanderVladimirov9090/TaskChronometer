@@ -24,16 +24,17 @@ import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 public class AddEditActivityFragment extends Fragment {
     private static final String TAG = "AddEditActivityFragment";
 
-    public enum FragmentEditMode {EDIT, ADD}
 
+
+    public enum FragmentEditMode {EDIT, ADD;}
     private FragmentEditMode mode;
 
     private EditText nameText;
+
     private EditText descriptionText;
     private EditText sortOrderText;
     private Button saveButton;
     private OnSaveListener onSaveListener;
-
     public AddEditActivityFragment() {
     }
 
@@ -63,6 +64,10 @@ public class AddEditActivityFragment extends Fragment {
         Log.d(TAG, "onDetach: Starts");
         super.onDetach();
         onSaveListener = null;
+    }
+
+    public boolean canClose() {
+        return false;
     }
 
     /**
