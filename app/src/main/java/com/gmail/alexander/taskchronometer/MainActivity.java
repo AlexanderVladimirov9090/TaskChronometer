@@ -1,5 +1,6 @@
 package com.gmail.alexander.taskchronometer;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
 
     public static final int DIALOG_ID_DELETE = 1;
     public static final int DIALOG_ID_CANCEL_EDIT = 2;
+    private AlertDialog dialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +91,26 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             case R.id.menumain_settings:
                 break;
             case R.id.menumain_showAbout:
+                showAboutDialog();
                 break;
             case R.id.menumain_generate:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAboutDialog() {
+        View messageView = getLayoutInflater().inflate(R.layout.about,null,false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.mipmap.ic_launcher_foreground);
+        TextView tv = (TextView) messageView.findViewById(R.id.about_version);
+        builder.setView(messageView);
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        String versionInfo= "v"+BuildConfig.VERSION_NAME;
+        tv.setText(versionInfo);
+        dialog.show();
     }
 
     /**
@@ -206,6 +225,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);
             dialog.setArguments(args);
             dialog.show(getFragmentManager(), null);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(dialog!=null&&dialog.isShowing()){
+            dialog.dismiss();
         }
     }
 
