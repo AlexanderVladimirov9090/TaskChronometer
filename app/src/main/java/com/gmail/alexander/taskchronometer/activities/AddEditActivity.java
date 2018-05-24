@@ -29,14 +29,11 @@ public class AddEditActivity extends AppCompatActivity implements OnSaveListener
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        if (fragmentManager.findFragmentById(R.id.fragment) == null) {
+        if (savedInstanceState == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
             AddEditActivityFragment fragment = new AddEditActivityFragment();
-
             Bundle arguments = getIntent().getExtras();
             fragment.setArguments(arguments);
-
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment, fragment);
             fragmentTransaction.commit();
