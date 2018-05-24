@@ -1,6 +1,7 @@
 package com.gmail.alexander.taskchronometer;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -97,20 +98,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showAboutDialog() {
-        View messageView = getLayoutInflater().inflate(R.layout.about,null,false);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.app_name);
-        builder.setIcon(R.mipmap.ic_launcher_foreground);
-        TextView tv = (TextView) messageView.findViewById(R.id.about_version);
-        builder.setView(messageView);
-        dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(true);
-        String versionInfo= "v"+BuildConfig.VERSION_NAME;
-        tv.setText(versionInfo);
-        dialog.show();
     }
 
     /**
@@ -231,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     @Override
     protected void onStop() {
         super.onStop();
-        if(dialog!=null&&dialog.isShowing()){
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
     }
@@ -265,5 +252,33 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 startActivity(detailIntent);
             }
         }
+    }
+
+    /**
+     * Shows information about application build and author.
+     */
+    private void showAboutDialog() {
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.mipmap.ic_launcher_foreground);
+        builder.setView(messageView);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+
+
+        TextView tv = (TextView) messageView.findViewById(R.id.about_version);
+        String versionInfo = "v" + BuildConfig.VERSION_NAME;
+        tv.setText(versionInfo);
+        dialog.show();
     }
 }

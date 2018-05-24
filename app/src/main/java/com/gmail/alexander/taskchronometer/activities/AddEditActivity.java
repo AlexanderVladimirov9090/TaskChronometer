@@ -29,17 +29,18 @@ public class AddEditActivity extends AppCompatActivity implements OnSaveListener
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AddEditActivityFragment fragment = new AddEditActivityFragment();
-
-        Bundle arguments = getIntent().getExtras();  // The line we'll change later
-//        arguments.putSerializable(Task.class.getSimpleName(), task);
-        fragment.setArguments(arguments);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment, fragment);
-        fragmentTransaction.commit();
 
+        if (fragmentManager.findFragmentById(R.id.fragment) == null) {
+            AddEditActivityFragment fragment = new AddEditActivityFragment();
+
+            Bundle arguments = getIntent().getExtras();
+            fragment.setArguments(arguments);
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment, fragment);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -102,7 +103,6 @@ public class AddEditActivity extends AppCompatActivity implements OnSaveListener
 
     /**
      * Shows confirmation dialog to the user.
-     *
      */
     private void showConfirmationDialog() {
         AppDialog dialog = new AppDialog();
