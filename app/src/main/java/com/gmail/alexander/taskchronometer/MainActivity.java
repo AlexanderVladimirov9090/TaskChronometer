@@ -1,5 +1,7 @@
 package com.gmail.alexander.taskchronometer;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
+import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
@@ -20,14 +26,16 @@ import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 /**
  * This is the starting point of the application.
  */
-public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener {
+public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener, DialogEvents {
     private static final String TAG = "MainActivity";
     // Whether or not th    e activity is in 2-pane mode
     // i.e. running in landscape on a tablet
     //If landscape is on for tablets
     private boolean twoPane = false;
 
-    private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
+    public static final int DIALOG_ID_DELETE = 1;
+    public static final int DIALOG_ID_CANCEL_EDIT = 2;
+    private AlertDialog dialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             case R.id.menumain_settings:
                 break;
             case R.id.menumain_showAbout:
+                showAboutDialog();
                 break;
             case R.id.menumain_generate:
                 break;
@@ -91,18 +100,132 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Fires taskEditRequest for editing a task.
+     *
+     * @param task
+     */
     @Override
     public void onEditClick(Task task) {
         taskEditRequest(task);
     }
 
+    /**
+     * Prompts user in form of dialog box for deletion of a task.
+     *
+     * @param task
+     */
     @Override
     public void onDeleteClick(Task task) {
-        getContentResolver().delete(TasksContract.buildTaskUri(task.getId()), null, null);
+        AppDialog appDialog = new AppDialog();
+        Bundle args = new Bundle();
+        args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_DELETE);
+        args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.delete_notification_message, task.getId(), task.getName()));
+        args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.del_dialog_positive_caption);
+        args.putLong("TaskID", task.getId());
+        appDialog.setArguments(args);
+        appDialog.show(getFragmentManager(), null);
     }
 
     /**
-     * This method is checking if Two-pane mode active or not.
+     * Saves task in to database.
+     */
+    @Override
+    public void onSaveClicked() {
+        Log.d(TAG, "onSaveClicked: Starts");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
+    }
+
+    /**
+     * Deletion of task is handled here when dialog box is tapped delete button.
+     *
+     * @param dialogId
+     * @param args
+     */
+    @Override
+    public void onPositiveDialogResult(int dialogId, Bundle args) {
+        Long taskId = args.getLong("TaskID");
+        switch (dialogId) {
+            case DIALOG_ID_DELETE:
+                if (BuildConfig.DEBUG && taskId == 0) {
+                    throw new AssertionError("Task ID is zero");
+                }
+                getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
+                break;
+            case DIALOG_ID_CANCEL_EDIT:
+                break;
+        }
+    }
+
+    /**
+     * This method is fired when tapped cancel on the dialog box.
+     *
+     * @param dialogId
+     * @param args
+     */
+    @Override
+    public void onNegativeDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onNegativeDialogResult: called");
+        switch (dialogId) {
+            case DIALOG_ID_DELETE:
+                break;
+            case DIALOG_ID_CANCEL_EDIT:
+                finish();
+                break;
+        }
+    }
+
+    /**
+     * This method is fired when dialog is cancelled.
+     *
+     * @param dialogId
+     */
+    @Override
+    public void onDialogCancelled(int dialogId) {
+        Log.d(TAG, "onDialogCancelled: called");
+    }
+
+    /**
+     * Handles action when back button is pressed.
+     */
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed: Starts");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddEditActivityFragment fragment = (AddEditActivityFragment) fragmentManager.findFragmentById(R.id.task_details_container);
+        if ((fragment == null) || fragment.canClose()) {
+            super.onBackPressed();
+        } else {
+            //show dialog to get confirmation to quit editing.
+            AppDialog dialog = new AppDialog();
+            Bundle args = new Bundle();
+            args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_CANCEL_EDIT);
+            args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
+            args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
+            args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);
+            dialog.setArguments(args);
+            dialog.show(getFragmentManager(), null);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    /**
+     * This is fired when user want to edit a task.
+     * Using Two-pane mode if the screen size allows it.
      *
      * @param task
      */
@@ -131,16 +254,31 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         }
     }
 
-    @Override
-    public void onSaveClicked() {
-        Log.d(TAG, "onSaveClicked: Starts");
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
-        if (fragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(fragment)
-                    .commit();
-        }
+    /**
+     * Shows information about application build and author.
+     */
+    private void showAboutDialog() {
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.mipmap.ic_launcher_foreground);
+        builder.setView(messageView);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+
+
+        TextView tv = (TextView) messageView.findViewById(R.id.about_version);
+        String versionInfo = "v" + BuildConfig.VERSION_NAME;
+        tv.setText(versionInfo);
+        dialog.show();
     }
 }

@@ -51,6 +51,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         return view;
     }
 
+    /**
+     * The creation of the loader.
+     *
+     * @param id
+     * @param args
+     * @return
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: starts with  id: " + id);
@@ -74,6 +81,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         }
     }
 
+    /**
+     * Executes when data is loaded.
+     *
+     * @param loader
+     * @param data
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d(TAG, "onLoadFinished: ");
@@ -84,6 +97,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         Log.d(TAG, "onLoadFinished: Count is: " + count);
     }
 
+    /**
+     * Loader is reset here for next reloading.
+     *
+     * @param loader
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         Log.d(TAG, "onLoaderReset: Starts");

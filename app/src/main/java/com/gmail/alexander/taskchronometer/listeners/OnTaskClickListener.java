@@ -7,12 +7,20 @@ import com.gmail.alexander.taskchronometer.domain_layer.Task;
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
- * This is the on click listener for edit and delete buttons.
+ * This interface is used for Editing and Deleting actions.
+ *
  *
  */
 public interface OnTaskClickListener {
-
+    /**
+     * Handles on edit action.
+     * @param task
+     */
     void onEditClick(Task task);
 
+    /**
+     * Handles on delete action.
+     * @param task
+     */
     void onDeleteClick(Task task);
 }
