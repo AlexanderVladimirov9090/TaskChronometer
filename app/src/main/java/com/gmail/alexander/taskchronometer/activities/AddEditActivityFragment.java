@@ -5,7 +5,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +28,7 @@ public class AddEditActivityFragment extends Fragment {
     private static final String TAG = "AddEditActivityFragment";
 
 
-    public enum FragmentEditMode {EDIT, ADD;}
+    public enum FragmentEditMode {EDIT, ADD}
 
     private FragmentEditMode mode;
 
@@ -33,7 +36,6 @@ public class AddEditActivityFragment extends Fragment {
 
     private EditText descriptionText;
     private EditText sortOrderText;
-    private Button saveButton;
     private OnSaveListener onSaveListener;
 
     public AddEditActivityFragment() {
@@ -65,6 +67,11 @@ public class AddEditActivityFragment extends Fragment {
         Log.d(TAG, "onDetach: Starts");
         super.onDetach();
         onSaveListener = null;
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+
     }
 
     public boolean canClose() {
@@ -85,14 +92,13 @@ public class AddEditActivityFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_add_edit, container, false);
 
-        nameText = (EditText) view.findViewById(R.id.addedit_name);
-        descriptionText = (EditText) view.findViewById(R.id.addedit_description);
-        sortOrderText = (EditText) view.findViewById(R.id.addedit_sortorder);
-        saveButton = (Button) view.findViewById(R.id.addedit_save);
+        nameText = view.findViewById(R.id.addedit_name);
+        descriptionText = view.findViewById(R.id.addedit_description);
+        sortOrderText = view.findViewById(R.id.addedit_sortorder);
 
-        //   Bundle argument = getActivity().getIntent().getExtras();
-
+        Button saveButton = (Button) view.findViewById(R.id.addedit_save);
         Bundle argument = getArguments();
+
         final Task task;
 
         if (argument != null) {
@@ -131,6 +137,10 @@ public class AddEditActivityFragment extends Fragment {
 
                 switch (mode) {
                     case EDIT:
+                        if (task == null) {
+                            break;
+                        }
+
                         if (!nameText.getText().toString().equals(task.getName())) {
                             values.put(TasksContract.Columns.TASKS_NAME, nameText.getText().toString());
                         }
@@ -161,5 +171,14 @@ public class AddEditActivityFragment extends Fragment {
 
         });
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 }

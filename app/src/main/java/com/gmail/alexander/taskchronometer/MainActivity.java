@@ -2,7 +2,7 @@ package com.gmail.alexander.taskchronometer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.gmail.alexander.taskchronometer.activities.AddEditActivity;
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
@@ -45,13 +44,33 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (findViewById(R.id.task_details_container) != null) {
+        /*if (findViewById(R.id.task_details_container) != null) {
             //The detail container view will be present only of the screen is large enough.
             // If this view is present, then activity should be in two-pane mode.
             twoPane = true;
 
-        }
+        }*/
+        twoPane = (getResources()).getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        Log.d(TAG, "onCreate: Twopane is: " + twoPane);
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
+        //Id AddEditActivity fragment is present. It is in editing mode.
+        boolean editing = fragmentManager.findFragmentById(R.id.task_details_container) != null;
+        Log.d(TAG, "onCreate: Editing is " + editing);
+        View addEditLayout = findViewById(R.id.task_details_container);
+        View mainFragment = findViewById(R.id.fragment);
+        if (twoPane) {
+            Log.d(TAG, "onCreate: twoPane mode ");
+            mainFragment.setVisibility(View.VISIBLE);
+            addEditLayout.setVisibility(View.VISIBLE);
+        } else {
+            if (editing) {
+                mainFragment.setVisibility(View.GONE);
+            } else {
+                mainFragment.setVisibility(View.VISIBLE);
+                addEditLayout.setVisibility(View.GONE);
+            }
+        }
     }
 
     /**
@@ -96,6 +115,15 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 break;
             case R.id.menumain_generate:
                 break;
+            case android.R.id.home:
+                AddEditActivityFragment fragment = (AddEditActivityFragment) getSupportFragmentManager().findFragmentById(R.id.task_details_container);
+                if (fragment.canClose()) {
+                    return super.onOptionsItemSelected(item);
+
+                } else {
+                    showConfirmationDialog();
+                    return true;
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -141,6 +169,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                     .remove(fragment)
                     .commit();
         }
+        View addEditLayout = findViewById(R.id.task_details_container);
+        View mainFragment = findViewById(R.id.fragment);
+
+        if (!twoPane) {
+            addEditLayout.setVisibility(View.GONE);
+            mainFragment.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -177,7 +212,25 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             case DIALOG_ID_DELETE:
                 break;
             case DIALOG_ID_CANCEL_EDIT:
-                finish();
+                //If we are editing, remove the fragment or close app.
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
+                if (fragment != null) {
+                    getSupportFragmentManager().
+                            beginTransaction().
+                            remove(fragment).
+                            commit();
+                    if (twoPane) {
+                        finish();
+                    } else {
+                        View addEditLayout = findViewById(R.id.task_details_container);
+                        View mainFragment = findViewById(R.id.fragment);
+                        addEditLayout.setVisibility(View.GONE);
+                        mainFragment.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    finish();
+                }
                 break;
         }
     }
@@ -204,15 +257,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             super.onBackPressed();
         } else {
             //show dialog to get confirmation to quit editing.
-            AppDialog dialog = new AppDialog();
-            Bundle args = new Bundle();
-            args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_CANCEL_EDIT);
-            args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
-            args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
-            args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);
-            dialog.setArguments(args);
-            dialog.show(getFragmentManager(), null);
-        }
+           showConfirmationDialog();
+            }
     }
 
     @Override
@@ -231,26 +277,20 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      */
     private void taskEditRequest(Task task) {
 
-        if (twoPane) {
-            Log.d(TAG, "taskEditRequest: Two-pane mode");
-            AddEditActivityFragment fragment = new AddEditActivityFragment();
-            Bundle arguments = new Bundle();
-            arguments.putSerializable(Task.class.getSimpleName(), task);
-            fragment.setArguments(arguments);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.task_details_container, fragment)
-                    .commit();
-        } else {
+        AddEditActivityFragment fragment = new AddEditActivityFragment();
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(Task.class.getSimpleName(), task);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.task_details_container, fragment)
+                .commit();
+        if (!twoPane) {
 
-            Intent detailIntent = new Intent(this, AddEditActivity.class);
-
-            if (task != null) {
-                detailIntent.putExtra(Task.class.getSimpleName(), task);
-                startActivity(detailIntent);
-            } else {
-                startActivity(detailIntent);
-            }
+            View mainFragment = findViewById(R.id.fragment);
+            View addEditLayout = findViewById(R.id.task_details_container);
+            mainFragment.setVisibility(View.GONE);
+            addEditLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -280,5 +320,20 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         String versionInfo = "v" + BuildConfig.VERSION_NAME;
         tv.setText(versionInfo);
         dialog.show();
+    }
+
+    /**
+     * Shows confirmation dialog to the user.
+     */
+    private void showConfirmationDialog() {
+        AppDialog dialog = new AppDialog();
+        Bundle args = new Bundle();
+        args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_CANCEL_EDIT);
+        args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
+        args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
+        args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);
+
+        dialog.setArguments(args);
+        dialog.show(getFragmentManager(), null);
     }
 }
