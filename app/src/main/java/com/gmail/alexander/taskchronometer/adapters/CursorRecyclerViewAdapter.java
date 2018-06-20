@@ -19,12 +19,15 @@ import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
  * This adapter is used for the Recycler View.
  */
 public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHolder> {
-    private static final String TAG = "CursorRecycleAdapter";
     private Cursor cursor;
     private OnTaskClickListener onTaskClickListener;
 
     public CursorRecyclerViewAdapter(Cursor cursor, OnTaskClickListener onTaskClickListener) {
         this.cursor = cursor;
+        this.onTaskClickListener = onTaskClickListener;
+    }
+
+    public void setOnTaskClickListener(OnTaskClickListener onTaskClickListener) {
         this.onTaskClickListener = onTaskClickListener;
     }
 

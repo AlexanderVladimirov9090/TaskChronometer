@@ -39,15 +39,26 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: called");
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: Starts");
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new CursorRecyclerViewAdapter(null, (OnTaskClickListener) getActivity());
+        if (adapter == null) {
+            adapter = new CursorRecyclerViewAdapter(null, (OnTaskClickListener) getActivity());
+        } else {
+            adapter.setOnTaskClickListener((OnTaskClickListener) getActivity());
+        }
         recyclerView.setAdapter(adapter);
-
         return view;
     }
 
@@ -107,4 +118,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         Log.d(TAG, "onLoaderReset: Starts");
         adapter.swapCursor(null);
     }
+
+
 }
