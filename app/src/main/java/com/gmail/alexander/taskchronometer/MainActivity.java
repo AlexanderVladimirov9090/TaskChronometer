@@ -44,13 +44,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*if (findViewById(R.id.task_details_container) != null) {
-            //The detail container view will be present only of the screen is large enough.
-            // If this view is present, then activity should be in two-pane mode.
-            twoPane = true;
-
-        }*/
         twoPane = (getResources()).getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         Log.d(TAG, "onCreate: Twopane is: " + twoPane);
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -8,9 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
-
-import static com.gmail.alexander.taskchronometer.activities.AddEditActivity.TAG;
 
 /**
  * Created by:
@@ -194,13 +191,10 @@ public class AppProvider extends ContentProvider {
 
         if (recordId >= 0) {
 
-            Log.d(TAG, "insert: Setting notify change " + uri);
             getContext().getContentResolver().notifyChange(uri, null);
         } else {
-            Log.d(TAG, "insert: Inserted: nothing is inserted");
         }
 
-        Log.d(TAG, "Exiting insert, returning " + returnUri);
         return returnUri;
 
     }
@@ -260,10 +254,8 @@ public class AppProvider extends ContentProvider {
         }
 
         if (count > 0) {
-            Log.d(TAG, "delete: Notify change whit uri: " + uri);
             getContext().getContentResolver().notifyChange(uri, null);
         } else {
-            Log.d(TAG, "delete: Noting is deleted.");
         }
 
         return count;
@@ -325,10 +317,8 @@ public class AppProvider extends ContentProvider {
         }
 
         if (count > 0) {
-            Log.d(TAG, "update: Notify change whit uri: " + uri);
             getContext().getContentResolver().notifyChange(uri, null);
         } else {
-            Log.d(TAG, "update: Noting is updated.");
         }
 
         return count;
