@@ -1,5 +1,6 @@
 package com.gmail.alexander.taskchronometer;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.gmail.alexander.taskchronometer.adapters.CursorRecyclerViewAdapter;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 
 import java.security.InvalidParameterException;
@@ -23,7 +25,7 @@ import java.security.InvalidParameterException;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, OnTaskClickListener {
     private static final String TAG = "MainActivityFragment";
     public static final int LOADER_ID = 0;
     private CursorRecyclerViewAdapter adapter;
@@ -34,6 +36,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Activity activity = getActivity();
+       //Activity containing this fragment must implement its callbacks.
+        if (!(activity instanceof OnTaskClickListener)) {
+            throw new ClassCastException(activity.getClass().getSimpleName() + " must be implemented OnClickListener interface.");
+        }
+
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
     }
@@ -54,10 +62,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.task_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (adapter == null) {
-            adapter = new CursorRecyclerViewAdapter(null, (OnTaskClickListener) getActivity());
-        } else {
+            //This fragment implements OnClickListener that is why this is called here.
+            adapter = new CursorRecyclerViewAdapter(null, this);
+        } /*else {
             adapter.setOnTaskClickListener((OnTaskClickListener) getActivity());
-        }
+        }*/
         recyclerView.setAdapter(adapter);
         return view;
     }
@@ -120,4 +129,19 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
 
+    @Override
+    public void onEditClick(Task task) {
+        OnTaskClickListener listener = (OnTaskClickListener) getActivity();
+        if(listener !=null){
+            listener.onEditClick(task);
+        }
+    }
+
+    @Override
+    public void onDeleteClick(Task task) {
+        OnTaskClickListener listener = (OnTaskClickListener) getActivity();
+        if(listener !=null){
+            listener.onDeleteClick(task);
+        }
+    }
 }
