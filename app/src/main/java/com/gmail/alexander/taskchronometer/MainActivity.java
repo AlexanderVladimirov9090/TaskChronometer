@@ -28,13 +28,14 @@ import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 public class MainActivity extends AppCompatActivity implements OnTaskClickListener, OnSaveListener, DialogEvents {
     private static final String TAG = "MainActivity";
     // Whether or not th    e activity is in 2-pane mode
-    // i.e. running in landscape on a tablet
-    //If landscape is on for tablets
-    private boolean twoPane = false;
 
+    // i.e. running in landscape on a tablet
     public static final int DIALOG_ID_DELETE = 1;
+    //If landscape is on for tablets
     public static final int DIALOG_ID_CANCEL_EDIT = 2;
+    private boolean twoPane = false;
     private AlertDialog dialog = null;
+    private static final int DIALOG_ID_CANCEL_EDIT_UP = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                     return super.onOptionsItemSelected(item);
 
                 } else {
-                    showConfirmationDialog();
+                    showConfirmationDialog(DIALOG_ID_CANCEL_EDIT_UP);
                     return true;
                 }
         }
@@ -195,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 getContentResolver().delete(TasksContract.buildTaskUri(taskId), null, null);
                 break;
             case DIALOG_ID_CANCEL_EDIT:
+            case DIALOG_ID_CANCEL_EDIT_UP:
                 break;
         }
     }
@@ -212,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             case DIALOG_ID_DELETE:
                 break;
             case DIALOG_ID_CANCEL_EDIT:
+            case DIALOG_ID_CANCEL_EDIT_UP:
                 //If we are editing, remove the fragment or close app.
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
@@ -221,7 +224,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                             remove(fragment).
                             commit();
                     if (twoPane) {
-                        finish();
+                        //in Landscape, quit if only the back button was pressed.
+                        if (dialogId == DIALOG_ID_CANCEL_EDIT) {
+                            finish();
+                        }
                     } else {
                         View addEditLayout = findViewById(R.id.task_details_container);
                         View mainFragment = findViewById(R.id.fragment);
@@ -257,8 +263,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
             super.onBackPressed();
         } else {
             //show dialog to get confirmation to quit editing.
-           showConfirmationDialog();
-            }
+            showConfirmationDialog(DIALOG_ID_CANCEL_EDIT);
+        }
     }
 
     @Override
@@ -325,10 +331,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     /**
      * Shows confirmation dialog to the user.
      */
-    private void showConfirmationDialog() {
+    private void showConfirmationDialog(int idDialog) {
         AppDialog dialog = new AppDialog();
         Bundle args = new Bundle();
-        args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_CANCEL_EDIT);
+        args.putInt(AppDialog.DIALOG_ID,idDialog);
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
         args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);
