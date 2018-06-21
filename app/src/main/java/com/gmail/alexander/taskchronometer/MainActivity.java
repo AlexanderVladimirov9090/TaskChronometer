@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
 import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
+import com.gmail.alexander.taskchronometer.domain_layer.Timing;
 import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     private boolean twoPane = false;
     private AlertDialog dialog = null;
     private static final int DIALOG_ID_CANCEL_EDIT_UP = 3;
+    private Timing currentTiming = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      * @param task
      */
     @Override
-    public void onEditClick(Task task) {
+    public void onEditClick(@NonNull Task task) {
         taskEditRequest(task);
     }
 
@@ -138,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      * @param task
      */
     @Override
-    public void onDeleteClick(Task task) {
+    public void onDeleteClick(@NonNull Task task) {
         AppDialog appDialog = new AppDialog();
         Bundle args = new Bundle();
         args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_DELETE);
@@ -150,8 +154,25 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     }
 
     @Override
-    public void onTaskLongClick(Task task) {
-
+    public void onTaskLongClick(@NonNull Task task) {
+        Toast.makeText(this, "Task: " + task.getName() + " is clicked", Toast.LENGTH_LONG).show();
+        TextView taskName = findViewById(R.id.curent_task);
+        if (currentTiming != null) {
+            if (task.getId() == currentTiming.getTask().getId()) {
+                //The current task was tapped a second time, so stop timing.
+                //TODO  saveTiming(currentTiming);
+                currentTiming = null;
+                taskName.setText(getString(R.string.no_task_message));
+            } else {
+                // a new task is being timed, so stop the old one first.
+                //TODO saveTiming(currentTiming);
+                currentTiming = new Timing(task);
+                taskName.setText("Timing: " + currentTiming.getTask().getName());
+            }
+        } else {
+            currentTiming = new Timing(task);
+            taskName.setText("Timing: " + currentTiming.getTask().getName());
+        }
     }
 
     /**
@@ -332,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     private void showConfirmationDialog(int idDialog) {
         AppDialog dialog = new AppDialog();
         Bundle args = new Bundle();
-        args.putInt(AppDialog.DIALOG_ID,idDialog);
+        args.putInt(AppDialog.DIALOG_ID, idDialog);
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
         args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);

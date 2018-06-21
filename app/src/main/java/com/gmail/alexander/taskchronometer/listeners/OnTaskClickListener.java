@@ -1,5 +1,7 @@
 package com.gmail.alexander.taskchronometer.listeners;
 
+import android.support.annotation.NonNull;
+
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 
 /**
@@ -16,17 +18,17 @@ public interface OnTaskClickListener {
      * Handles on edit action.
      * @param task
      */
-    void onEditClick(Task task);
+    void onEditClick(@NonNull Task task);
 
     /**
      * Handles on delete action.
      * @param task
      */
-    void onDeleteClick(Task task);
+    void onDeleteClick(@NonNull Task task);
 
     /**
      * Handles on long click actions.
      * @param task
      */
-    void onTaskLongClick(Task task);
+    void onTaskLongClick(@NonNull Task task);
 }

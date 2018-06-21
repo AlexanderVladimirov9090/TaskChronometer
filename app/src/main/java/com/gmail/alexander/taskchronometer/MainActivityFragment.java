@@ -3,6 +3,7 @@ package com.gmail.alexander.taskchronometer;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -130,7 +131,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
 
     @Override
-    public void onEditClick(Task task) {
+    public void onEditClick(@NonNull Task task) {
         OnTaskClickListener listener = (OnTaskClickListener) getActivity();
         if(listener !=null){
             listener.onEditClick(task);
@@ -138,7 +139,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onDeleteClick(Task task) {
+    public void onDeleteClick(@NonNull Task task) {
         OnTaskClickListener listener = (OnTaskClickListener) getActivity();
         if(listener !=null){
             listener.onDeleteClick(task);
@@ -146,7 +147,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onTaskLongClick(Task task) {
+    public void onTaskLongClick(@NonNull Task task) {
+        OnTaskClickListener listener = (OnTaskClickListener) getActivity();
+        if(listener !=null){
+            listener.onTaskLongClick(task);
+        }
 
     }
 }
