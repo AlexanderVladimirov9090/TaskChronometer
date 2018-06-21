@@ -89,11 +89,20 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
                     }
                 }
             };
-
+            View.OnLongClickListener buttonLongListener = new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(onTaskClickListener !=null){
+                        onTaskClickListener.onTaskLongClick(task);
+                        return true;
+                    }
+                    return false;
+                }
+            };
             holder.editButton.setOnClickListener(buttonListener);
             holder.deleteButton.setOnClickListener(buttonListener);
+            holder.itemView.setOnLongClickListener(buttonLongListener);
         }
-
     }
 
     /**

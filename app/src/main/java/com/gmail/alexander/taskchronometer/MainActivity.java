@@ -149,6 +149,11 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         appDialog.show(getFragmentManager(), null);
     }
 
+    @Override
+    public void onTaskLongClick(Task task) {
+
+    }
+
     /**
      * Saves task in to database.
      */

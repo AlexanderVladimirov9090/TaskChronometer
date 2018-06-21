@@ -23,4 +23,10 @@ public interface OnTaskClickListener {
      * @param task
      */
     void onDeleteClick(Task task);
+
+    /**
+     * Handles on long click actions.
+     * @param task
+     */
+    void onTaskLongClick(Task task);
 }

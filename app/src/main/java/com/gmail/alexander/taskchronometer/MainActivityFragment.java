@@ -144,4 +144,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             listener.onDeleteClick(task);
         }
     }
+
+    @Override
+    public void onTaskLongClick(Task task) {
+
+    }
 }
