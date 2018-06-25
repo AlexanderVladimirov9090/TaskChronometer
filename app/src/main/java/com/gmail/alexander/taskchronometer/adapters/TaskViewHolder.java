@@ -20,14 +20,14 @@ class TaskViewHolder extends RecyclerView.ViewHolder {
     ImageButton editButton;
     ImageButton deleteButton;
     View itemView;
-    public TaskViewHolder(View itemView) {
+    TaskViewHolder(View itemView) {
 
         super(itemView);
 
-        this.name = (TextView) itemView.findViewById(R.id.til_name);
-        this.description = (TextView) itemView.findViewById(R.id.til_description);
-        this.editButton = (ImageButton) itemView.findViewById(R.id.til_edit);
-        this.deleteButton = (ImageButton) itemView.findViewById(R.id.til_delete);
+        this.name = itemView.findViewById(R.id.til_name);
+        this.description = itemView.findViewById(R.id.til_description);
+        this.editButton = itemView.findViewById(R.id.til_edit);
+        this.deleteButton = itemView.findViewById(R.id.til_delete);
         this.itemView = itemView;
     }
 }

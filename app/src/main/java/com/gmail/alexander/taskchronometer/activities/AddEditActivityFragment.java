@@ -96,7 +96,7 @@ public class AddEditActivityFragment extends Fragment {
         descriptionText = view.findViewById(R.id.addedit_description);
         sortOrderText = view.findViewById(R.id.addedit_sortorder);
 
-        Button saveButton = (Button) view.findViewById(R.id.addedit_save);
+        Button saveButton = view.findViewById(R.id.addedit_save);
         Bundle argument = getArguments();
 
         final Task task;

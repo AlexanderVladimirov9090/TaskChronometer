@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
  * This is the content provider for the application.
+ *
  */
 
 public class AppProvider extends ContentProvider {

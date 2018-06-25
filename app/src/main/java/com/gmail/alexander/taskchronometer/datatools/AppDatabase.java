@@ -3,9 +3,6 @@ package com.gmail.alexander.taskchronometer.datatools;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by:
@@ -18,8 +15,8 @@ import static android.content.ContentValues.TAG;
 
 public class AppDatabase extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "TaskTimer.db";
-    public static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "TaskTimer.db";
+    private static final int DATABASE_VERSION = 1;
 
     private static AppDatabase instance = null;
 
