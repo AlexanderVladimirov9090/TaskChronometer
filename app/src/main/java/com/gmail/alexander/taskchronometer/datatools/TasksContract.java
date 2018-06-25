@@ -54,7 +54,7 @@ public class TasksContract {
      * @param uri uri of the task.
      * @return id as long.
      */
-    static long getTaskId(Uri uri) {
+    public static long getTaskId(Uri uri) {
         return ContentUris.parseId(uri);
     }
 }

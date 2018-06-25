@@ -13,7 +13,7 @@ import static com.gmail.alexander.taskchronometer.datatools.AppProvider.CONTENT_
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
  */
-public class TimingContract {
+public class TimingsContract {
     static final String TABLE_NAME = "Timings";
 
     public static class Columns {
@@ -51,7 +51,7 @@ public class TimingContract {
      * @param uri uri of the Timing.
      * @return id as long.
      */
-    static long getTimingId(Uri uri) {
+   public static long getTimingId(Uri uri) {
         return ContentUris.parseId(uri);
     }
 
