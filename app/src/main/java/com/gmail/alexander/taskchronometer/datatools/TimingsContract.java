@@ -20,7 +20,7 @@ public class TimingsContract {
         public static final String _ID = BaseColumns._ID;
         public static final String TIMINGS_TASK_ID = "TaskID";
         public static final String TIMINGS_START_TIME = "StartTime";
-        public static final String TMINIGS_DURATION = "Duration";
+        public static final String TIMINGS_DURATION = "Duration";
 
         private Columns() {
 

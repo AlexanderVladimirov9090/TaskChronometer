@@ -3,6 +3,9 @@ package com.gmail.alexander.taskchronometer.datatools;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by:
@@ -46,7 +49,13 @@ public class AppDatabase extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+       createTaskTable(db);
+       addTimingTable(db);
+    }
+
+    private void createTaskTable(SQLiteDatabase db) {
         String statement;
+
 
         statement = "CREATE TABLE " + TasksContract.TABLE_NAME + " ("
                 + TasksContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, "
@@ -54,8 +63,6 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + TasksContract.Columns.TASKS_DESCRIPTION + " TEXT, "
                 + TasksContract.Columns.TASKS_SORTORDER + " INTEGER);";
         db.execSQL(statement);
-
-
     }
 
     /**
@@ -69,22 +76,23 @@ public class AppDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                // upgrade logic from version 1
+                // this is where update from version 1 is executed.
+                //TODO Fix the logic why does not update!
                 addTimingTable(db);
                 break;
+
             default:
                 throw new IllegalStateException("onUpgrade() with unknown newVersion: " + newVersion);
         }
 
     }
     private void addTimingTable(SQLiteDatabase db){
-       String statement;
-
-        statement = "CREATE TABLE " + TimingsContract.TABLE_NAME + "("
+        Log.d(TAG, "addTimingTable: Starts");
+       String statement = "CREATE TABLE " + TimingsContract.TABLE_NAME + " ("
                 + TimingsContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, "
                 + TimingsContract.Columns.TIMINGS_TASK_ID + " INTEGER NOT NULL, "
                 + TimingsContract.Columns.TIMINGS_START_TIME + " INTEGER, "
-                + TimingsContract.Columns.TMINIGS_DURATION + "INTEGER);";
+                + TimingsContract.Columns.TIMINGS_DURATION + "  INTEGER);";
         db.execSQL(statement);
 
         statement = "CREATE TRIGGER Remove_Task"
@@ -95,5 +103,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + " WHERE " + TimingsContract.Columns.TIMINGS_TASK_ID + " = OLD." + TasksContract.Columns._ID + ";"
                 + " END;";
         db.execSQL(statement);
+
+        Log.d(TAG, "addTimingTable: Ends");
     }
 }

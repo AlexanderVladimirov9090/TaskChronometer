@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gmail.alexander.taskchronometer.adapters.CursorRecyclerViewAdapter;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
@@ -51,7 +50,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         }
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
-
+        setTimingText(currentTiming);
     }
 
     @Override
@@ -155,28 +154,28 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onTaskLongClick(@NonNull Task task) {
-        Toast.makeText(getActivity(), "Task: " + task.getName() + " is clicked", Toast.LENGTH_LONG).show();
-        TextView taskName = getActivity().findViewById(R.id.curent_task);
         if (currentTiming != null) {
             if (task.getId() == currentTiming.getTask().getId()) {
                 //The current task was tapped a second time, so stop timing.
                 saveTiming(currentTiming);
                 currentTiming = null;
-                taskName.setText(getString(R.string.no_task_message));
+                setTimingText(null);
             } else {
                 // a new task is being timed, so stop the old one first.
                 saveTiming(currentTiming);
                 currentTiming = new Timing(task);
-                taskName.setText("Timing: " + currentTiming.getTask().getName());
+                setTimingText(currentTiming);
+
             }
         } else {
             currentTiming = new Timing(task);
-            taskName.setText("Timing: " + currentTiming.getTask().getName());
+            setTimingText(currentTiming);
         }
     }
 
     /**
      * Saves Timings of a task to the database.
+     *
      * @param currentTiming
      */
     private void saveTiming(@NonNull Timing currentTiming) {
@@ -187,8 +186,18 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         ContentValues values = new ContentValues();
         values.put(TimingsContract.Columns.TIMINGS_TASK_ID, currentTiming.getTask().getId());
         values.put(TimingsContract.Columns.TIMINGS_START_TIME, currentTiming.getStartTime());
-        values.put(TimingsContract.Columns.TMINIGS_DURATION, currentTiming.getDuration());
+        values.put(TimingsContract.Columns.TIMINGS_DURATION, currentTiming.getDuration());
         contentResolver.insert(TimingsContract.CONTENT_URI, values);
 
+    }
+
+    private void setTimingText(Timing timing) {
+        TextView taskName = getActivity().findViewById(R.id.curent_task);
+
+        if (timing != null) {
+            taskName.setText("Timing " + currentTiming.getTask().getName());
+        } else {
+            taskName.setText(R.string.no_task_message);
+        }
     }
 }
