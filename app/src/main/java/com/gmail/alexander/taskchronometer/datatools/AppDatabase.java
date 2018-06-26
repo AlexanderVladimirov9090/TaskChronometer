@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AppDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TaskTimer.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static AppDatabase instance = null;
 
@@ -40,7 +40,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * This is where TaskS table is created.
+     * This is where tables are created.
      *
      * @param db
      */
@@ -53,8 +53,9 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + TasksContract.Columns.TASKS_NAME + " TEXT NOT NULL, "
                 + TasksContract.Columns.TASKS_DESCRIPTION + " TEXT, "
                 + TasksContract.Columns.TASKS_SORTORDER + " INTEGER);";
-
         db.execSQL(statement);
+
+
     }
 
     /**
@@ -69,9 +70,30 @@ public class AppDatabase extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 1:
                 // upgrade logic from version 1
+                addTimingTable(db);
                 break;
             default:
                 throw new IllegalStateException("onUpgrade() with unknown newVersion: " + newVersion);
         }
+
+    }
+    private void addTimingTable(SQLiteDatabase db){
+       String statement;
+
+        statement = "CREATE TABLE " + TimingsContract.TABLE_NAME + "("
+                + TimingsContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, "
+                + TimingsContract.Columns.TIMINGS_TASK_ID + " INTEGER NOT NULL, "
+                + TimingsContract.Columns.TIMINGS_START_TIME + " INTEGER, "
+                + TimingsContract.Columns.TMINIGS_DURATION + "INTEGER);";
+        db.execSQL(statement);
+
+        statement = "CREATE TRIGGER Remove_Task"
+                + " AFTER DELETE ON " + TasksContract.TABLE_NAME
+                + " FOR EACH ROW"
+                + " BEGIN"
+                + " DELETE FROM " + TimingsContract.TABLE_NAME
+                + " WHERE " + TimingsContract.Columns.TIMINGS_TASK_ID + " = OLD." + TasksContract.Columns._ID + ";"
+                + " END;";
+        db.execSQL(statement);
     }
 }
