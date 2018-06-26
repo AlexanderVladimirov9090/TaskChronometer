@@ -1,8 +1,11 @@
 package com.gmail.alexander.taskchronometer;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -14,10 +17,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.adapters.CursorRecyclerViewAdapter;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+import com.gmail.alexander.taskchronometer.datatools.TimingsContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
+import com.gmail.alexander.taskchronometer.domain_layer.Timing;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 
 import java.security.InvalidParameterException;
@@ -29,6 +35,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private static final String TAG = "MainActivityFragment";
     public static final int LOADER_ID = 0;
     private CursorRecyclerViewAdapter adapter;
+    private Timing currentTiming = null;
 
     public MainActivityFragment() {
     }
@@ -37,13 +44,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
-       //Activity containing this fragment must implement its callbacks.
+        //Activity containing this fragment must implement its callbacks.
         if (!(activity instanceof OnTaskClickListener)) {
             throw new ClassCastException(activity.getClass().getSimpleName() + " must be implemented OnClickListener interface.");
         }
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
-
+        setTimingText(currentTiming);
     }
 
     @Override
@@ -130,18 +137,67 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
 
     @Override
-    public void onEditClick(Task task) {
+    public void onEditClick(@NonNull Task task) {
         OnTaskClickListener listener = (OnTaskClickListener) getActivity();
-        if(listener !=null){
+        if (listener != null) {
             listener.onEditClick(task);
         }
     }
 
     @Override
-    public void onDeleteClick(Task task) {
+    public void onDeleteClick(@NonNull Task task) {
         OnTaskClickListener listener = (OnTaskClickListener) getActivity();
-        if(listener !=null){
+        if (listener != null) {
             listener.onDeleteClick(task);
+        }
+    }
+
+    @Override
+    public void onTaskLongClick(@NonNull Task task) {
+        if (currentTiming != null) {
+            if (task.getId() == currentTiming.getTask().getId()) {
+                //The current task was tapped a second time, so stop timing.
+                saveTiming(currentTiming);
+                currentTiming = null;
+                setTimingText(null);
+            } else {
+                // a new task is being timed, so stop the old one first.
+                saveTiming(currentTiming);
+                currentTiming = new Timing(task);
+                setTimingText(currentTiming);
+
+            }
+        } else {
+            currentTiming = new Timing(task);
+            setTimingText(currentTiming);
+        }
+    }
+
+    /**
+     * Saves Timings of a task to the database.
+     *
+     * @param currentTiming
+     */
+    private void saveTiming(@NonNull Timing currentTiming) {
+
+        //If we have an open timing set duration to save.
+        currentTiming.setDuration();
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(TimingsContract.Columns.TIMINGS_TASK_ID, currentTiming.getTask().getId());
+        values.put(TimingsContract.Columns.TIMINGS_START_TIME, currentTiming.getStartTime());
+        values.put(TimingsContract.Columns.TIMINGS_DURATION, currentTiming.getDuration());
+        contentResolver.insert(TimingsContract.CONTENT_URI, values);
+
+    }
+
+    private void setTimingText(Timing timing) {
+        TextView taskName = getActivity().findViewById(R.id.curent_task);
+
+        if (timing != null) {
+            taskName.setText("Timing " + currentTiming.getTask().getName());
+        } else {
+            taskName.setText(R.string.no_task_message);
         }
     }
 }

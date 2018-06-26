@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      * @param task
      */
     @Override
-    public void onEditClick(Task task) {
+    public void onEditClick(@NonNull Task task) {
         taskEditRequest(task);
     }
 
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
      * @param task
      */
     @Override
-    public void onDeleteClick(Task task) {
+    public void onDeleteClick(@NonNull Task task) {
         AppDialog appDialog = new AppDialog();
         Bundle args = new Bundle();
         args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_DELETE);
@@ -147,6 +148,11 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
         args.putLong("TaskID", task.getId());
         appDialog.setArguments(args);
         appDialog.show(getFragmentManager(), null);
+    }
+
+    @Override
+    public void onTaskLongClick(@NonNull Task task) {
+     // Need to satisfy the interface.
     }
 
     /**
@@ -327,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     private void showConfirmationDialog(int idDialog) {
         AppDialog dialog = new AppDialog();
         Bundle args = new Bundle();
-        args.putInt(AppDialog.DIALOG_ID,idDialog);
+        args.putInt(AppDialog.DIALOG_ID, idDialog);
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.canclerEditDiag_message));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancleEditDiag_positive_caption);
         args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancleEditDiag_negative_caption);

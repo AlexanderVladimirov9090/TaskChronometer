@@ -27,10 +27,10 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
         this.onTaskClickListener = onTaskClickListener;
     }
 
- /*   public void setOnTaskClickListener(OnTaskClickListener onTaskClickListener) {
-        this.onTaskClickListener = onTaskClickListener;
-    }
-*/
+    /*   public void setOnTaskClickListener(OnTaskClickListener onTaskClickListener) {
+           this.onTaskClickListener = onTaskClickListener;
+       }
+   */
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -65,6 +65,7 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
                     cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASKS_DESCRIPTION)),
                     cursor.getInt(cursor.getColumnIndex(TasksContract.Columns.TASKS_SORTORDER)));
 
+
             holder.name.setText(task.getName());
             holder.description.setText(task.getDescription());
             holder.editButton.setVisibility(View.VISIBLE);
@@ -89,11 +90,20 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
                     }
                 }
             };
-
+            View.OnLongClickListener buttonLongListener = new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onTaskClickListener != null) {
+                        onTaskClickListener.onTaskLongClick(task);
+                        return true;
+                    }
+                    return false;
+                }
+            };
             holder.editButton.setOnClickListener(buttonListener);
             holder.deleteButton.setOnClickListener(buttonListener);
+            holder.itemView.setOnLongClickListener(buttonLongListener);
         }
-
     }
 
     /**

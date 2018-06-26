@@ -18,8 +18,8 @@ import static android.content.ContentValues.TAG;
 
 public class AppDatabase extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "TaskTimer.db";
-    public static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "TaskTimer.db";
+    private static final int DATABASE_VERSION = 2;
 
     private static AppDatabase instance = null;
 
@@ -43,20 +43,25 @@ public class AppDatabase extends SQLiteOpenHelper {
     }
 
     /**
-     * This is where TaskS table is created.
+     * This is where tables are created.
      *
      * @param db
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+       createTaskTable(db);
+       addTimingTable(db);
+    }
+
+    private void createTaskTable(SQLiteDatabase db) {
         String statement;
+
 
         statement = "CREATE TABLE " + TasksContract.TABLE_NAME + " ("
                 + TasksContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, "
                 + TasksContract.Columns.TASKS_NAME + " TEXT NOT NULL, "
                 + TasksContract.Columns.TASKS_DESCRIPTION + " TEXT, "
                 + TasksContract.Columns.TASKS_SORTORDER + " INTEGER);";
-
         db.execSQL(statement);
     }
 
@@ -71,10 +76,34 @@ public class AppDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
-                // upgrade logic from version 1
+                // this is where update from version 1 is executed.
+                //TODO Fix the logic why does not update!
+                addTimingTable(db);
                 break;
+
             default:
                 throw new IllegalStateException("onUpgrade() with unknown newVersion: " + newVersion);
         }
+
+    }
+    private void addTimingTable(SQLiteDatabase db){
+        Log.d(TAG, "addTimingTable: Starts");
+       String statement = "CREATE TABLE " + TimingsContract.TABLE_NAME + " ("
+                + TimingsContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, "
+                + TimingsContract.Columns.TIMINGS_TASK_ID + " INTEGER NOT NULL, "
+                + TimingsContract.Columns.TIMINGS_START_TIME + " INTEGER, "
+                + TimingsContract.Columns.TIMINGS_DURATION + "  INTEGER);";
+        db.execSQL(statement);
+
+        statement = "CREATE TRIGGER Remove_Task"
+                + " AFTER DELETE ON " + TasksContract.TABLE_NAME
+                + " FOR EACH ROW"
+                + " BEGIN"
+                + " DELETE FROM " + TimingsContract.TABLE_NAME
+                + " WHERE " + TimingsContract.Columns.TIMINGS_TASK_ID + " = OLD." + TasksContract.Columns._ID + ";"
+                + " END;";
+        db.execSQL(statement);
+
+        Log.d(TAG, "addTimingTable: Ends");
     }
 }

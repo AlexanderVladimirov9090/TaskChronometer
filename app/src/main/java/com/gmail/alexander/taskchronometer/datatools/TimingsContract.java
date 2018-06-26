@@ -12,18 +12,15 @@ import static com.gmail.alexander.taskchronometer.datatools.AppProvider.CONTENT_
  *
  * @author Alexander Vladimirov
  * <alexandervladimirov1902@gmail.com>
- * This class is used for consistency and convenience
- * about logic used for database operatoins.
  */
-
-public class TasksContract {
-    static final String TABLE_NAME = "Tasks";
+public class TimingsContract {
+    static final String TABLE_NAME = "Timings";
 
     public static class Columns {
         public static final String _ID = BaseColumns._ID;
-        public static final String TASKS_NAME = "Name";
-        public static final String TASKS_DESCRIPTION = "Description";
-        public static final String TASKS_SORTORDER = "SortOrder";
+        public static final String TIMINGS_TASK_ID = "TaskID";
+        public static final String TIMINGS_START_TIME = "StartTime";
+        public static final String TIMINGS_DURATION = "Duration";
 
         private Columns() {
 
@@ -31,7 +28,7 @@ public class TasksContract {
     }
 
     /**
-     * URI that is used to access the Tasks table.
+     * URI that is used to access the Timings table.
      */
     public static final Uri CONTENT_URI = Uri.withAppendedPath(CONTENT_AUTHORITY_URI, TABLE_NAME);
 
@@ -39,22 +36,23 @@ public class TasksContract {
     static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
 
     /**
-     * Build the URI used for single task
+     * Build the URI used for single Timing
      *
-     * @param taskId id of the task
-     * @return URI for the single task.
+     * @param TimingId id of the Timing
+     * @return URI for the single Timing.
      */
-    public static Uri buildTaskUri(long taskId) {
-        return ContentUris.withAppendedId(CONTENT_URI, taskId);
+    public static Uri buildTimingUri(long TimingId) {
+        return ContentUris.withAppendedId(CONTENT_URI, TimingId);
     }
 
     /**
-     * Gets id of the task.
+     * Gets id of the Timing.
      *
-     * @param uri uri of the task.
+     * @param uri uri of the Timing.
      * @return id as long.
      */
-    public static long getTaskId(Uri uri) {
+   public static long getTimingId(Uri uri) {
         return ContentUris.parseId(uri);
     }
+
 }

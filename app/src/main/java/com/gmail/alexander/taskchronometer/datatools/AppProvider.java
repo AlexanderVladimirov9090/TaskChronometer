@@ -7,7 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.util.Objects;
 
 /**
  * Created by:
@@ -49,8 +52,8 @@ public class AppProvider extends ContentProvider {
         matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME, TASKS);
         matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME + "/#", TASKS_ID);
 
-//        matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS);
-//        matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME + "/#", TIMINGS_ID);
+        matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS);
+        matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME + "/#", TIMINGS_ID);
 //
 //        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATIONS);
 //        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME + "/#", TASK_DURATIONS_ID);
@@ -68,7 +71,7 @@ public class AppProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final int match = uriMatcher.match(uri);
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
@@ -84,15 +87,15 @@ public class AppProvider extends ContentProvider {
                 queryBuilder.appendWhere(TasksContract.Columns._ID + " = " + taskId);
                 break;
 
-//            case TIMINGS:
-//                queryBuilder.setTables(TimingsContract.TABLE_NAME);
-//                break;
+            case TIMINGS:
+                queryBuilder.setTables(TimingsContract.TABLE_NAME);
+                break;
 
-//            case TIMINGS_ID:
-//                queryBuilder.setTables(TimingsContract.TABLE_NAME);
-//                long timingId = TimingsContract.getTimingId(uri);
-//                queryBuilder.appendWhere(TimingsContract.Columns._ID + " = " + timingId);
-//                break;
+            case TIMINGS_ID:
+                queryBuilder.setTables(TimingsContract.TABLE_NAME);
+                long timingId = TimingsContract.getTimingId(uri);
+                queryBuilder.appendWhere(TimingsContract.Columns._ID + " = " + timingId);
+                break;
 //
 //            case TASK_DURATIONS:
 //                queryBuilder.setTables(DurationsContract.TABLE_NAME);
@@ -100,7 +103,7 @@ public class AppProvider extends ContentProvider {
 
 //            case TASK_DURATIONS_ID:
 //                queryBuilder.setTables(DurationsContract.TABLE_NAME);
-//                long durationId = DurationsContract.getDuration(uri);
+//                long durationId = DurationsContract.getDurationId(uri);
 //                queryBuilder.appendWhere(DurationsContract.Columns._ID + " = " + durationId);
 //                break;
 
@@ -112,14 +115,14 @@ public class AppProvider extends ContentProvider {
         SQLiteDatabase db = openHelper.getReadableDatabase();
 
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
 
         return cursor;
     }
 
     @Nullable
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
 
         final int match = uriMatcher.match(uri);
 
@@ -130,17 +133,17 @@ public class AppProvider extends ContentProvider {
             case TASKS_ID:
                 return TasksContract.CONTENT_ITEM_TYPE;
 
-//            case TIMINGS:
-//                return TimingsContract.Timings.CONTENT_TYPE;
-//
-//            case TIMINGS_ID:
-//                return TimingsContract.Timings.CONTENT_ITEM_TYPE;
+            case TIMINGS:
+                return TimingsContract.CONTENT_TYPE;
+
+            case TIMINGS_ID:
+                return TimingsContract.CONTENT_ITEM_TYPE;
 //
 //            case TASK_DURATIONS:
-//                return DurationsContract.TaskDurations.CONTENT_TYPE;
+//                return DurationsContract.CONTENT_TYPE;
 //
 //            case TASK_DURATIONS_ID:
-//                return DurationsContract.TaskDurations.CONTENT_ITEM_TYPE;
+//                return DurationsContract.CONTENT_ITEM_TYPE;
 
             default:
                 throw new IllegalArgumentException("unknown Uri: " + uri);
@@ -156,7 +159,7 @@ public class AppProvider extends ContentProvider {
      */
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final int match = uriMatcher.match(uri);
 
         final SQLiteDatabase database;
@@ -176,14 +179,14 @@ public class AppProvider extends ContentProvider {
                 break;
 
             case TIMINGS:
-//                database = openHelper.getWritableDatabase();
-//                recordId = database.insert(TimingsContract.Timings.buildTimingUri(recordId));
-//                if(recordId >=0) {
-//                    returnUri = TimingsContract.Timings.buildTimingUri(recordId);
-//                } else {
-//                    throw new android.database.SQLException("Failed to insert into " + uri.toString());
-//                }
-//                break;
+                database = openHelper.getWritableDatabase();
+                recordId = database.insert(TimingsContract.TABLE_NAME, null, values);
+                if (recordId >= 0) {
+                    returnUri = TimingsContract.buildTimingUri(recordId);
+                } else {
+                    throw new android.database.SQLException("Failed to insert into " + uri.toString());
+                }
+                break;
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
@@ -191,10 +194,8 @@ public class AppProvider extends ContentProvider {
 
         if (recordId >= 0) {
 
-            getContext().getContentResolver().notifyChange(uri, null);
-        } else {
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
-
         return returnUri;
 
     }
@@ -208,7 +209,7 @@ public class AppProvider extends ContentProvider {
      * @return
      */
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final int match = uriMatcher.match(uri);
 
         final SQLiteDatabase database;
@@ -233,31 +234,29 @@ public class AppProvider extends ContentProvider {
                 count = database.delete(TasksContract.TABLE_NAME, selectionCriteria, selectionArgs);
                 break;
 
-//            case TIMINGS:
-//                database = openHelper.getWritableDatabase();
-//                count = database.delete(TimingsContract.TABLE_NAME, selection, selectionArgs);
-//                break;
-//
-//            case TIMINGS_ID:
-//                database = openHelper.getWritableDatabase();
-//                long timingsId = TimingsContract.getTaskId(uri);
-//                selectionCriteria = TimingsContract.Columns._ID + " = " + timingsId;
-//
-//                if((selection != null) && (selection.length()>0)) {
-//                    selectionCriteria += " AND (" + selection + ")";
-//                }
-//                count = database.delete(TimingsContract.TABLE_NAME, selectionCriteria, selectionArgs);
-//                break;
+            case TIMINGS:
+                database = openHelper.getWritableDatabase();
+                count = database.delete(TimingsContract.TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case TIMINGS_ID:
+                database = openHelper.getWritableDatabase();
+                long timingsId = TimingsContract.getTimingId(uri);
+                selectionCriteria = TimingsContract.Columns._ID + " = " + timingsId;
+
+                if ((selection != null) && (selection.length() > 0)) {
+                    selectionCriteria += " AND (" + selection + ")";
+                }
+                count = database.delete(TimingsContract.TABLE_NAME, selectionCriteria, selectionArgs);
+                break;
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
 
         if (count > 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        } else {
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
-
         return count;
     }
 
@@ -296,29 +295,28 @@ public class AppProvider extends ContentProvider {
                 count = database.update(TasksContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
                 break;
 
-//            case TIMINGS:
-//                database = openHelper.getWritableDatabase();
-//                count = database.update(TimingsContract.TABLE_NAME, values, selection, selectionArgs);
-//                break;
-//
-//            case TIMINGS_ID:
-//                database = openHelper.getWritableDatabase();
-//                long timingsId = TimingsContract.getTaskId(uri);
-//                selectionCriteria = TimingsContract.Columns._ID + " = " + timingsId;
-//
-//                if((selection != null) && (selection.length()>0)) {
-//                    selectionCriteria += " AND (" + selection + ")";
-//                }
-//                count = database.update(TimingsContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
-//                break;
+            case TIMINGS:
+                database = openHelper.getWritableDatabase();
+                count = database.update(TimingsContract.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+            case TIMINGS_ID:
+                database = openHelper.getWritableDatabase();
+                long timingsId = TimingsContract.getTimingId(uri);
+                selectionCriteria = TimingsContract.Columns._ID + " = " + timingsId;
+
+                if ((selection != null) && (selection.length() > 0)) {
+                    selectionCriteria += " AND (" + selection + ")";
+                }
+                count = database.update(TimingsContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
+                break;
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
 
         if (count > 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
-        } else {
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
 
         return count;

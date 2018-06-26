@@ -28,6 +28,6 @@
     <string name="about_copyright">Copyright \u00a9 2018 Alexander Vladimirov</string>
     <string name="weblink_about">Application Available at: https://github.com/AlexanderVladimirov9090/TaskChronometer</string>
     <string name="emai_about">Contact: alexandervladimirov1902@gmail.com</string>
-    <string name="credits_about">The knowledge to build this application is provided by Tim Buchalka from: https://learnprogramming.academy/</string>
+    <string name="credits_about">The knowledge to build this application is provided by Tim Buchalka from: https://learnprogramming.academy/.Icons are provided by: https://smashicons.com/</string>
 
 </resources>
