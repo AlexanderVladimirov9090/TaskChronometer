@@ -54,9 +54,9 @@ public class AppProvider extends ContentProvider {
 
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS);
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME + "/#", TIMINGS_ID);
-//
-//        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATIONS);
-//        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME + "/#", TASK_DURATIONS_ID);
+
+        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATIONS);
+        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME + "/#", TASK_DURATIONS_ID);
 
         return matcher;
     }
@@ -96,16 +96,16 @@ public class AppProvider extends ContentProvider {
                 long timingId = TimingsContract.getTimingId(uri);
                 queryBuilder.appendWhere(TimingsContract.Columns._ID + " = " + timingId);
                 break;
-//
-//            case TASK_DURATIONS:
-//                queryBuilder.setTables(DurationsContract.TABLE_NAME);
-//                break;
 
-//            case TASK_DURATIONS_ID:
-//                queryBuilder.setTables(DurationsContract.TABLE_NAME);
-//                long durationId = DurationsContract.getDurationId(uri);
-//                queryBuilder.appendWhere(DurationsContract.Columns._ID + " = " + durationId);
-//                break;
+            case TASK_DURATIONS:
+                queryBuilder.setTables(DurationsContract.TABLE_NAME);
+                break;
+
+            case TASK_DURATIONS_ID:
+                queryBuilder.setTables(DurationsContract.TABLE_NAME);
+                long durationId = DurationsContract.getDurationId(uri);
+                queryBuilder.appendWhere(DurationsContract.Columns._ID + " = " + durationId);
+                break;
 
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -138,12 +138,12 @@ public class AppProvider extends ContentProvider {
 
             case TIMINGS_ID:
                 return TimingsContract.CONTENT_ITEM_TYPE;
-//
-//            case TASK_DURATIONS:
-//                return DurationsContract.CONTENT_TYPE;
-//
-//            case TASK_DURATIONS_ID:
-//                return DurationsContract.CONTENT_ITEM_TYPE;
+
+            case TASK_DURATIONS:
+                return DurationsContract.CONTENT_TYPE;
+
+            case TASK_DURATIONS_ID:
+                return DurationsContract.CONTENT_ITEM_TYPE;
 
             default:
                 throw new IllegalArgumentException("unknown Uri: " + uri);

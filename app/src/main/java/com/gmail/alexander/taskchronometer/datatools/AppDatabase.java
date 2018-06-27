@@ -19,7 +19,7 @@ import static android.content.ContentValues.TAG;
 public class AppDatabase extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "TaskTimer.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static AppDatabase instance = null;
 
@@ -49,8 +49,9 @@ public class AppDatabase extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-       createTaskTable(db);
-       addTimingTable(db);
+        createTaskTable(db);
+        addTimingTable(db);
+        addDurationsView(db);
     }
 
     private void createTaskTable(SQLiteDatabase db) {
@@ -68,17 +69,19 @@ public class AppDatabase extends SQLiteOpenHelper {
     /**
      * This is used for when there is an upgrade to the database.
      *
-     * @param db
-     * @param oldVersion
-     * @param newVersion
+     * @param db databse that is used for the update.
+     * @param oldVersion older version of the database.
+     * @param newVersion newer version of the database.
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 1:
                 // this is where update from version 1 is executed.
-                //TODO Fix the logic why does not update!
                 addTimingTable(db);
+                // fall trough, to include version 2 upgrade logic.
+            case 2:
+                addDurationsView(db);
                 break;
 
             default:
@@ -86,9 +89,10 @@ public class AppDatabase extends SQLiteOpenHelper {
         }
 
     }
-    private void addTimingTable(SQLiteDatabase db){
+
+    private void addTimingTable(SQLiteDatabase db) {
         Log.d(TAG, "addTimingTable: Starts");
-       String statement = "CREATE TABLE " + TimingsContract.TABLE_NAME + " ("
+        String statement = "CREATE TABLE " + TimingsContract.TABLE_NAME + " ("
                 + TimingsContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, "
                 + TimingsContract.Columns.TIMINGS_TASK_ID + " INTEGER NOT NULL, "
                 + TimingsContract.Columns.TIMINGS_START_TIME + " INTEGER, "
@@ -105,5 +109,37 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL(statement);
 
         Log.d(TAG, "addTimingTable: Ends");
+    }
+
+    private void addDurationsView(SQLiteDatabase db) {
+        /*
+        CREATE VIEW vwTaskDuration AS
+        SELECT Timings._id,
+      Tasks.Name,
+      Tasks.Description,
+      Timings.StartTime,
+      DATE(Timings.StartTime, 'unixepoch') AS StartDate,
+      SUM(Timings.Duration) AS Duration
+      FROM Task INNER JOIN Timings
+      ON Task._id = Timings.TaskId
+      GROUP BY Tasks._id, StartDate;
+      */
+
+        String statement = " CREATE VIEW " + DurationsContract.TABLE_NAME
+                + " AS SELECT " + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns._ID + ", "
+                + TimingsContract.TABLE_NAME + "." + TasksContract.Columns.TASKS_NAME + ", "
+                + TasksContract.TABLE_NAME + "." + TasksContract.Columns.TASKS_DESCRIPTION + ", "
+                + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_START_TIME + ","
+                + " DATE(" + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_START_TIME + ", 'unixepoch')"
+                + " AS " + DurationsContract.Columns.DURATION_START_DATE + ","
+                + " SUM(" + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_DURATION + ")"
+                + " AS " + DurationsContract.Columns.DURATION_DURATION
+                + " FROM " + TasksContract.TABLE_NAME + " JOIN " + TimingsContract.TABLE_NAME
+                + " ON " + TasksContract.TABLE_NAME + "." + TasksContract.Columns._ID + " = "
+                + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_TASK_ID
+                + " GROUP BY " + DurationsContract.Columns.DURATION_START_DATE + ", " + DurationsContract.Columns.DURATIONS_NAME
+                + ";";
+        Log.d(TAG, "addDurationsView: " + statement);
+        db.execSQL(statement);
     }
 }

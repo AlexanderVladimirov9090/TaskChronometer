@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
+import com.gmail.alexander.taskchronometer.debug.TestData;
 import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
 import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
@@ -78,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if(BuildConfig.DEBUG){
+            MenuItem generate = menu.findItem(R.id.menumain_generate);
+            generate.setVisible(true);
+        }
         return true;
     }
 
@@ -109,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 showAboutDialog();
                 break;
             case R.id.menumain_generate:
+                TestData.generateTestData(getContentResolver());
                 break;
             case android.R.id.home:
                 AddEditActivityFragment fragment = (AddEditActivityFragment) getSupportFragmentManager().findFragmentById(R.id.task_details_container);
