@@ -39,21 +39,26 @@ public class DurationsRecViewAdapter extends RecyclerView.Adapter<DurationViewHo
 
     @Override
     public void onBindViewHolder(DurationViewHolder holder, int position) {
-        if (cursor != null && (cursor.getCount() != 0)) {
-            throw new IllegalStateException("Could not move CURSOR to position: " + position);
+        if ((cursor != null) && (cursor.getCount() != 0)) {
+            if (!cursor.moveToPosition(position)) {
+                throw new IllegalStateException("Couldn't move cursor to position " + position);
+            }
+            String name = cursor.getString(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_NAME));
+            String description = cursor.getString(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_DESCRIPTION));
+            Long startTime = cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_START_TIME));
+            long totalDuration = cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_DURATION));
+
+            holder.name.setText(name);
+            if (holder.description != null) {    // Description is not present in portrait
+                holder.description.setText(description);
+            }
+
+            String userDate = dateFormat.format(startTime * 1000); // The database stores seconds, we need milliseconds
+            String totalTime = formatDuration(totalDuration);
+
+            holder.startDate.setText(userDate);
+            holder.duration.setText(totalTime);
         }
-        String name = cursor.getString(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_NAME));
-        String description = cursor.getString(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_DESCRIPTION));
-        long startTime = cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_START_TIME));
-        long totalDuration = cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_DURATION));
-        holder.name.setText(name);
-        if (holder.description != null) {
-            holder.description.setText(description);
-        }
-        String userDate = dateFormat.format(startTime * 1000);// startTime is in second that is why we convert it to milliseconds.
-        String totalTime = formatDuration(totalDuration);
-        holder.startDate.setText(userDate);
-        holder.duration.setText(totalTime);
     }
 
     @Override
@@ -69,9 +74,10 @@ public class DurationsRecViewAdapter extends RecyclerView.Adapter<DurationViewHo
      */
     private String formatDuration(long duration) {
         long hours = duration / 3600;
-        long reminder = duration - (hours * 3600);
-        long minutes = reminder / 60;
-        long seconds = reminder - (minutes * 60);
+        long remainder = duration - (hours * 3600);
+        long minutes = remainder / 60;
+        long seconds = remainder - (minutes * 60);
+
         return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
