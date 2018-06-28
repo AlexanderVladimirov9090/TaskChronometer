@@ -133,7 +133,7 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + " DATE(" + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_START_TIME + ", 'unixepoch')"
                 + " AS " + DurationsContract.Columns.DURATION_START_DATE + ","
                 + " SUM(" + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_DURATION + ")"
-                + " AS " + DurationsContract.Columns.DURATION_DURATION
+                + " AS " + DurationsContract.Columns.DURATIONS_DURATION
                 + " FROM " + TasksContract.TABLE_NAME + " JOIN " + TimingsContract.TABLE_NAME
                 + " ON " + TasksContract.TABLE_NAME + "." + TasksContract.Columns._ID + " = "
                 + TimingsContract.TABLE_NAME + "." + TimingsContract.Columns.TIMINGS_TASK_ID

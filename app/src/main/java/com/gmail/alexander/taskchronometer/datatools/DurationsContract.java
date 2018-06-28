@@ -22,7 +22,7 @@ public class DurationsContract {
         public static final String DURATIONS_DESCRIPTION = TasksContract.Columns.TASKS_DESCRIPTION;
         public static final String DURATIONS_START_TIME =TimingsContract.Columns.TIMINGS_START_TIME;
         public static final String DURATION_START_DATE = "StartDate";
-        public static final String DURATION_DURATION= TimingsContract.Columns.TIMINGS_DURATION;
+        public static final String DURATIONS_DURATION = TimingsContract.Columns.TIMINGS_DURATION;
 
 
         private Columns() {

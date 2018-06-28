@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gmail.alexander.taskchronometer.R;
+import com.gmail.alexander.taskchronometer.datatools.DurationsContract;
+
+import java.util.Locale;
 
 
 /**
@@ -29,19 +32,47 @@ public class DurationsRecViewAdapter extends RecyclerView.Adapter<DurationViewHo
     @Override
     public DurationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_duration_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_duration_item, parent, false);
 
         return new DurationViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(DurationViewHolder holder, int position) {
-
+        if (cursor != null && (cursor.getCount() != 0)) {
+            throw new IllegalStateException("Could not move CURSOR to position: " + position);
+        }
+        String name = cursor.getString(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_NAME));
+        String description = cursor.getString(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_DESCRIPTION));
+        long startTime = cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_START_TIME));
+        long totalDuration = cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATIONS_DURATION));
+        holder.name.setText(name);
+        if (holder.description != null) {
+            holder.description.setText(description);
+        }
+        String userDate = dateFormat.format(startTime * 1000);// startTime is in second that is why we convert it to milliseconds.
+        String totalTime = formatDuration(totalDuration);
+        holder.startDate.setText(userDate);
+        holder.duration.setText(totalTime);
     }
 
     @Override
     public int getItemCount() {
         return cursor != null ? cursor.getCount() : 0;
+    }
+
+    /**
+     * Convert duration to formatted date.
+     *
+     * @param duration
+     * @return
+     */
+    private String formatDuration(long duration) {
+        long hours = duration / 3600;
+        long reminder = duration - (hours * 3600);
+        long minutes = reminder / 60;
+        long seconds = reminder - (minutes * 60);
+        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     /**
