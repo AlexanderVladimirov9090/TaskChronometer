@@ -2,6 +2,7 @@ package com.gmail.alexander.taskchronometer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
+import com.gmail.alexander.taskchronometer.activities.DurationsReport;
 import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.debug.TestData;
 import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 taskEditRequest(null);
                 break;
             case R.id.menumain_showDurations:
+                startActivity(new Intent(this, DurationsReport.class));
                 break;
             case R.id.menumain_settings:
                 break;
