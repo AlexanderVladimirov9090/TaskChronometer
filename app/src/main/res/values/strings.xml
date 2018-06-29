@@ -38,5 +38,6 @@
     <string name="rm_title_filter_week">Show week</string>
     <string name="rm_filter_date">Set report date</string>
     <string name="rm_title_delete">Delete old records</string>
+    <string name="tb_date_title">Date</string>
 
 </resources>
