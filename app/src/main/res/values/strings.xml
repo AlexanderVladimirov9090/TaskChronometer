@@ -39,5 +39,8 @@
     <string name="rm_filter_date">Set report date</string>
     <string name="rm_title_delete">Delete old records</string>
     <string name="tb_date_title">Date</string>
+    <string name="date_title_filter">Select date for report</string>
+    <string name="date_title_delete">Select Date to Delete up to</string>
+    <string name="delete_timings_message">Are you sure you want to delete timings before: %1s?</string>
 
 </resources>
