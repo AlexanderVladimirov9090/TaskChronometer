@@ -1,9 +1,11 @@
 package com.gmail.alexander.taskchronometer.activities;
 
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -20,20 +22,23 @@ import android.widget.DatePicker;
 
 import com.gmail.alexander.taskchronometer.R;
 import com.gmail.alexander.taskchronometer.adapters.DurationsRecViewAdapter;
+import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
+import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;
 import com.gmail.alexander.taskchronometer.persistence_layer.contractors.DurationsContract;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TimingsContract;
 
 import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-
-public class DurationsReportActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, DatePickerDialog.OnDateSetListener {
+public class DurationsReportActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        DatePickerDialog.OnDateSetListener, DialogEvents {
     public static final String CURRENT_DATE = "CURRENT_DATE";
     public static final String DISPLAY_WEEK = "DISPLAY_WEEK";
 
     public static final int DIALOG_FILTER = 1;
     public static final int DIALOG_DELETE = 2;
-
+    public static final String DELETION_DATE = "DELETION_DATE";
     private static final int LOADER_ID = 1;
     private static final String TAG = "DurationsReportActivity";
     private static final String SELECTION_PARAM = "SELECTION";
@@ -56,6 +61,18 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        if (savedInstanceState != null) {
+            long timeInMillis = savedInstanceState.getLong(CURRENT_DATE, 0);
+            //when the Activity is created it will be 0.
+            if (timeInMillis != 0) {
+                calendar.setTimeInMillis(timeInMillis);
+                //Make sure that the time is cleared.
+                calendar.clear(GregorianCalendar.HOUR_OF_DAY);
+                calendar.clear(GregorianCalendar.MINUTE);
+                calendar.clear(GregorianCalendar.SECOND);
+            }
+            displayWeek = savedInstanceState.getBoolean(DISPLAY_WEEK, true);
+        }
         applyFilter();
         RecyclerView recyclerView = findViewById(R.id.td_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -65,6 +82,13 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         }
         recyclerView.setAdapter(adapter);
         getSupportLoaderManager().initLoader(LOADER_ID, args, this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(CURRENT_DATE, calendar.getTimeInMillis());
+        outState.putBoolean(DISPLAY_WEEK, displayWeek);
     }
 
     @Override
@@ -85,10 +109,11 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
                 getSupportLoaderManager().restartLoader(LOADER_ID, args, this);
                 return true;
             case R.id.rm_filter_date:
-                showDatePickerDialog("Select date for report", DIALOG_FILTER);
+                showDatePickerDialog(getString(R.string.date_title_filter), DIALOG_FILTER);
                 return true;
             case R.id.rm_delete:
-                //TODO showDatePickerDialog(); //Actucal Deleting will be done in onDataSer();
+                showDatePickerDialog(getString(R.string.date_title_delete), DIALOG_DELETE);
+                //  onDateSet();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -125,13 +150,22 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         Log.d(TAG, "onDateSet: called");
         //Check the id
         int dialogId = (int) view.getTag();
+        calendar.set(year, month, dayOfMonth, 0, 0, 0);
+
         switch (dialogId) {
             case DIALOG_FILTER:
-                calendar.set(year, month, dayOfMonth, 0, 0, 0);
                 applyFilter();
                 getSupportLoaderManager().restartLoader(LOADER_ID, args, this);
                 break;
             case DIALOG_DELETE:
+                String fromDate = android.text.format.DateFormat.getDateFormat(this).format(calendar.getTimeInMillis());
+                AppDialog dialog = new AppDialog();
+                Bundle args = new Bundle();
+                args.putInt(AppDialog.DIALOG_ID, 1);
+                args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.delete_timings_message, fromDate));
+                args.putLong(DELETION_DATE, calendar.getTimeInMillis());
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), null);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid mode when receiving DataPickerDialog result!");
@@ -184,6 +218,7 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
         }
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
@@ -220,7 +255,7 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
      * @param data
      */
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         Log.d(TAG, "onLoadFinished: ");
 
         adapter.swapCursor(data);
@@ -235,9 +270,40 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
      * @param loader
      */
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         Log.d(TAG, "onLoaderReset: Starts");
         adapter.swapCursor(null);
     }
 
+    private void deleteRecords(Long deleteDate) {
+        Log.d(TAG, "deleteRecords: Starts");
+        long longDate = deleteDate / 1000;
+        String[] selectionArgs = new String[]{Long.toString(longDate)};
+        String selection = TimingsContract.Columns.TIMINGS_START_TIME + " < ?";
+        ContentResolver contentResolver = getContentResolver();
+        contentResolver.delete(TimingsContract.CONTENT_URI, selection, selectionArgs);
+        applyFilter();
+        getSupportLoaderManager().restartLoader(LOADER_ID, args, this);
+        Log.d(TAG, "deleteRecords: Finished");
+    }
+
+    @Override
+    public void onPositiveDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onPositiveDialogResult: Starts");
+        Long deleteDate = args.getLong(DELETION_DATE);
+        deleteRecords(deleteDate);
+        //re-query, to refresh the view.
+        getSupportLoaderManager().restartLoader(LOADER_ID, args, this);
+
+    }
+
+    @Override
+    public void onNegativeDialogResult(int dialogId, Bundle args) {
+
+    }
+
+    @Override
+    public void onDialogCancelled(int dialogId) {
+
+    }
 }
