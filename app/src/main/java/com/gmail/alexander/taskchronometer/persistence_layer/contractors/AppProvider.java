@@ -25,8 +25,7 @@ public class AppProvider extends ContentProvider {
     private AppDatabase openHelper;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-
-    static final String CONTENT_AUTHORITY = "com.gmail.alexander.taskchronometer.datatools";
+    static final String CONTENT_AUTHORITY = "com.gmail.alexander.taskchronometer.persistence_layer.contractors";
 
     public static final Uri CONTENT_AUTHORITY_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 

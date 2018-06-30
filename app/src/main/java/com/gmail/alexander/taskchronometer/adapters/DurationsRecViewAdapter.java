@@ -94,7 +94,7 @@ public class DurationsRecViewAdapter extends RecyclerView.Adapter<DurationViewHo
         if (newCursor == cursor) {
             return null;
         }
-
+        int numItem = getItemCount();
         final Cursor oldCursor = cursor;
         cursor = newCursor;
 
@@ -103,7 +103,7 @@ public class DurationsRecViewAdapter extends RecyclerView.Adapter<DurationViewHo
             notifyDataSetChanged();
         } else {
             // notify the observers about the lack of a data set.
-            notifyItemRangeRemoved(0, getItemCount());
+            notifyItemRangeRemoved(0, numItem); // Use the old counts.
         }
 
         return oldCursor;

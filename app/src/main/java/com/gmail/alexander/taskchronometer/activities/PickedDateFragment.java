@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
+import com.gmail.alexander.taskchronometer.dialogs.CustomDatePickerDialog;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -46,7 +48,7 @@ public class PickedDateFragment extends DialogFragment implements DatePickerDial
         int month = calendar.get(GregorianCalendar.MONTH);
         int day= calendar.get(GregorianCalendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),this,year,month,day);
+        CustomDatePickerDialog datePickerDialog = (CustomDatePickerDialog) new CustomDatePickerDialog(getContext(),this,year,month,day);
         if(title!=null){
             datePickerDialog.setTitle(title);
         }
