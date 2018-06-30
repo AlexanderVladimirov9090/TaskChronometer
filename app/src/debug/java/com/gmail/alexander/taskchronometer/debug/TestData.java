@@ -5,8 +5,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.gmail.alexander.taskchronometer.datatools.TasksContract;
-import com.gmail.alexander.taskchronometer.datatools.TimingsContract;
+import com.gmail.alexander.taskchronometer.contractors.TasksContract;
+import com.gmail.alexander.taskchronometer.contractors.TimingsContract;
 
 import java.util.GregorianCalendar;
 

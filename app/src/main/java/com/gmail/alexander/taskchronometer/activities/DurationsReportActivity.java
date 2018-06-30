@@ -20,7 +20,7 @@ import android.widget.DatePicker;
 
 import com.gmail.alexander.taskchronometer.R;
 import com.gmail.alexander.taskchronometer.adapters.DurationsRecViewAdapter;
-import com.gmail.alexander.taskchronometer.datatools.DurationsContract;
+import com.gmail.alexander.taskchronometer.contractors.DurationsContract;
 
 import java.security.InvalidParameterException;
 import java.util.Date;

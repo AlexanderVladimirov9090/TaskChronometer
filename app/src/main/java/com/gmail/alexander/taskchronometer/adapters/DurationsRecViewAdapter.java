@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gmail.alexander.taskchronometer.R;
-import com.gmail.alexander.taskchronometer.datatools.DurationsContract;
+import com.gmail.alexander.taskchronometer.contractors.DurationsContract;
 
 import java.util.Locale;
 

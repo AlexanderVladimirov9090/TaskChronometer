@@ -1,4 +1,4 @@
-package com.gmail.alexander.taskchronometer.datatools;
+package com.gmail.alexander.taskchronometer.contractors;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
