@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.adapters.CursorRecyclerViewAdapter;
-import com.gmail.alexander.taskchronometer.datatools.TasksContract;
-import com.gmail.alexander.taskchronometer.datatools.TimingsContract;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TasksContract;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TimingsContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.domain_layer.Timing;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;

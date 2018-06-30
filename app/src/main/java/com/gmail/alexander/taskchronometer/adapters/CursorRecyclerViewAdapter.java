@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gmail.alexander.taskchronometer.R;
-import com.gmail.alexander.taskchronometer.datatools.TasksContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TasksContract;
 
 /**
  * Created by:
@@ -135,6 +135,7 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
             return null;
         }
 
+        int numItem = getItemCount();
         final Cursor oldCursor = cursor;
         cursor = newCursor;
 
@@ -143,7 +144,7 @@ public class CursorRecyclerViewAdapter extends RecyclerView.Adapter<TaskViewHold
             notifyDataSetChanged();
         } else {
             // notify the observers about the lack of a data set.
-            notifyItemRangeRemoved(0, getItemCount());
+            notifyItemRangeRemoved(0, numItem);
         }
 
         return oldCursor;

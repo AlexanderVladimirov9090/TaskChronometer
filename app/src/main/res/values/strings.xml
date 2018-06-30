@@ -29,5 +29,15 @@
     <string name="weblink_about">Application Available at: https://github.com/AlexanderVladimirov9090/TaskChronometer</string>
     <string name="emai_about">Contact: alexandervladimirov1902@gmail.com</string>
     <string name="credits_about">The knowledge to build this application is provided by Tim Buchalka from: https://learnprogramming.academy/.Icons are provided by: https://smashicons.com/</string>
+    <string name="td_text_name">Task name</string>
+    <string name="td_text_date">Date</string>
+    <string name="td_text_duration">Duration</string>
+    <string name="td_text_description">Description</string>
+    <string name="title_activity_durations_report">DurationsReport</string>
+    <string name="rm_title_filter_day">Show day</string>
+    <string name="rm_title_filter_week">Show week</string>
+    <string name="rm_filter_date">Set report date</string>
+    <string name="rm_title_delete">Delete old records</string>
+    <string name="tb_date_title">Date</string>
 
 </resources>
