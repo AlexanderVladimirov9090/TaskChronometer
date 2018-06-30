@@ -42,5 +42,6 @@
     <string name="date_title_filter">Select date for report</string>
     <string name="date_title_delete">Select Date to Delete up to</string>
     <string name="delete_timings_message">Are you sure you want to delete timings before: %1s?</string>
+    <string name="td_date_title">Date</string>
 
 </resources>

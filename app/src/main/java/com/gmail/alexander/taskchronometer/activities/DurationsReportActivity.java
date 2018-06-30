@@ -18,7 +18,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.R;
 import com.gmail.alexander.taskchronometer.adapters.DurationsRecViewAdapter;
@@ -31,8 +33,10 @@ import java.security.InvalidParameterException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
 public class DurationsReportActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        DatePickerDialog.OnDateSetListener, DialogEvents {
+        DatePickerDialog.OnDateSetListener,
+        DialogEvents, View.OnClickListener {
     public static final String CURRENT_DATE = "CURRENT_DATE";
     public static final String DISPLAY_WEEK = "DISPLAY_WEEK";
 
@@ -73,6 +77,22 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
             }
             displayWeek = savedInstanceState.getBoolean(DISPLAY_WEEK, true);
         }
+
+        // Set the listener for the buttons so we can sort the report.
+        TextView taskName = findViewById(R.id.td_name_heading);
+        taskName.setOnClickListener(this);
+
+        TextView taskDesc = findViewById(R.id.td_description_heading);
+        if(taskDesc != null) {
+            taskDesc.setOnClickListener(this);
+        }
+
+        TextView taskDate = findViewById(R.id.td_start_heading);
+        taskDate.setOnClickListener(this);
+
+        TextView taskDuration = findViewById(R.id.td_duration_heading);
+        taskDuration.setOnClickListener(this);
+
         applyFilter();
         RecyclerView recyclerView = findViewById(R.id.td_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -305,5 +325,34 @@ public class DurationsReportActivity extends AppCompatActivity implements Loader
     @Override
     public void onDialogCancelled(int dialogId) {
 
+    }
+
+    /**
+     * Modify the order of timings data.
+     * By Name.
+     * By Description.
+     * By Start Time.
+     * By Duration of a task.
+     * @param v view that is tapped.
+     */
+    @Override
+    public void onClick(View v) {
+        Log.d(TAG, "onClick: Started");
+        switch(v.getId()) {
+            case R.id.td_name_heading:
+                args.putString(SORT_ORDER_PARAM, DurationsContract.Columns.DURATIONS_NAME);
+                break;
+            case R.id.td_description_heading:
+                args.putString(SORT_ORDER_PARAM, DurationsContract.Columns.DURATIONS_DESCRIPTION);
+                break;
+            case R.id.td_start_heading:
+                args.putString(SORT_ORDER_PARAM, DurationsContract.Columns.DURATIONS_START_DATE);
+                break;
+            case R.id.td_duration_heading:
+                args.putString(SORT_ORDER_PARAM, DurationsContract.Columns.DURATIONS_DURATION);
+                break;
+        }
+
+        getSupportLoaderManager().restartLoader(LOADER_ID, args, this);
     }
 }
