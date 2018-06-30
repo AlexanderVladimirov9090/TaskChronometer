@@ -1,11 +1,11 @@
-package com.gmail.alexander.taskchronometer.contractors;
+package com.gmail.alexander.taskchronometer.persistence_layer.contractors;
 
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import static com.gmail.alexander.taskchronometer.contractors.AppProvider.CONTENT_AUTHORITY;
-import static com.gmail.alexander.taskchronometer.contractors.AppProvider.CONTENT_AUTHORITY_URI;
+import static com.gmail.alexander.taskchronometer.persistence_layer.contractors.AppProvider.CONTENT_AUTHORITY;
+import static com.gmail.alexander.taskchronometer.persistence_layer.contractors.AppProvider.CONTENT_AUTHORITY_URI;
 
 /**
  * Created by:

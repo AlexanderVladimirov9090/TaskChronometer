@@ -21,8 +21,8 @@
         </activity>
 
         <provider
-            android:name=".contractors.AppProvider"
-            android:authorities="com.gmail.alexander.taskchronometer.contractors"
+            android:name=".persistence_layer.contractors.AppProvider"
+            android:authorities="com.gmail.alexander.taskchronometer.persistence_layer.contractors"
             android:exported="false" />
 
         <activity

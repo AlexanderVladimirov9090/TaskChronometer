@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gmail.alexander.taskchronometer.R;
-import com.gmail.alexander.taskchronometer.contractors.TasksContract;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TasksContract;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
 

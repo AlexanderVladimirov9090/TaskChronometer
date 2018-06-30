@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.activities.DurationsReportActivity;
-import com.gmail.alexander.taskchronometer.contractors.TasksContract;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TasksContract;
 import com.gmail.alexander.taskchronometer.debug.TestData;
 import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
 import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;

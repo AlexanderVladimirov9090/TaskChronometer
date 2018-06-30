@@ -1,4 +1,4 @@
-package com.gmail.alexander.taskchronometer.contractors;
+package com.gmail.alexander.taskchronometer.persistence_layer.contractors;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
