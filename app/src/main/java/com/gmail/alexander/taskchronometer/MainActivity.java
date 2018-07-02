@@ -18,13 +18,12 @@ import android.widget.TextView;
 
 import com.gmail.alexander.taskchronometer.activities.AddEditActivityFragment;
 import com.gmail.alexander.taskchronometer.activities.DurationsReportActivity;
-import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TasksContract;
-import com.gmail.alexander.taskchronometer.debug.TestData;
 import com.gmail.alexander.taskchronometer.dialogs.AppDialog;
 import com.gmail.alexander.taskchronometer.dialogs.DialogEvents;
 import com.gmail.alexander.taskchronometer.domain_layer.Task;
 import com.gmail.alexander.taskchronometer.listeners.OnSaveListener;
 import com.gmail.alexander.taskchronometer.listeners.OnTaskClickListener;
+import com.gmail.alexander.taskchronometer.persistence_layer.contractors.TasksContract;
 
 /**
  * This is the starting point of the application.
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskClickListen
                 showAboutDialog();
                 break;
             case R.id.menumain_generate:
-                TestData.generateTestData(getContentResolver());
+                //TestData.generateTestData(getContentResolver());
                 break;
             case android.R.id.home:
                 AddEditActivityFragment fragment = (AddEditActivityFragment) getSupportFragmentManager().findFragmentById(R.id.task_details_container);
