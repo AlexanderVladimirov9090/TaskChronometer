@@ -195,7 +195,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         TextView taskName = getActivity().findViewById(R.id.curent_task);
 
         if (timing != null) {
-            taskName.setText("Timing " + currentTiming.getTask().getName());
+            taskName.setText("Timing: " + currentTiming.getTask().getName());
         } else {
             taskName.setText(R.string.no_task_message);
         }

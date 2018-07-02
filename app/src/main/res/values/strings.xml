@@ -4,10 +4,10 @@
     <string name="menutitle_addTask">Add Task</string>
     <string name="menumain_showDurations">Durations Report</string>
     <string name="menumain_showAbout">About TaskChronometer</string>
-    <string name="menumain_About">About Task Chrono</string>
+    <string name="menumain_About">About Task Chronometer</string>
     <string name="menumain_about">About App</string>
     <string name="menumain_generate">Generate Data</string>
-    <string name="no_task_message">No Task Selected</string>
+    <string name="no_task_message">Long tap on task to time it.</string>
     <string name="edit_button_description">Button To Edit Task Description</string>
     <string name="delete_button_description">Button to delete task</string>
     <string name="addedit_hint">Task Name: required</string>
